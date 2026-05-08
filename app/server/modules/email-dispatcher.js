@@ -3,18 +3,18 @@ var ES = require('./email-settings');
 var EM = {};
 module.exports = EM;
 
-EM.server = require("emailjs/email").server.connect({
+var emailjs = require('emailjs');
 
+EM.client = new emailjs.SMTPClient({
 	host 	    : ES.host,
 	user 	    : ES.user,
 	password    : ES.password,
 	ssl		    : true
-
 });
 
 EM.dispatchResetPasswordLink = function(account, callback)
 {
-	EM.server.send({
+	EM.client.send({
 		from         : ES.sender,
 		to           : account.email,
 		subject      : 'Password Reset',

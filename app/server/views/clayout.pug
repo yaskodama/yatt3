@@ -1,0 +1,289 @@
+extends layout2
+
+block content
+    table
+        tr
+            td(width='600',align='left',style='color:red')
+                - if(message) {
+                    | #{message}
+                - }
+            td(width='550',align='right')= name
+        tr
+            td(width='600',align='left')
+                #langbox
+                    span#language_i18n Language:
+                    select#lang
+                    span#langbrowser
+            td(align='right')
+                button#btn-logout2.btn.btn-primary
+                    i.icon-lock.icon-white
+                    span#signout_i18n Sign Out
+    #wrapper.ui-widget-content.ui-corner-all
+        p
+            #welcome_i18n(align='center',style='font-family:Century,Lucida Sans Unicode,sans-serif;font-size:4.4em;line-height:1.1em;color:#47FFFC;') Welcome to YaTT
+        #lectures_i18n.subtitle Lecture
+        p
+        div(align='right')
+            table
+                tr
+                    td
+                        p
+                        a.open-LayoutGroup.bbutton(href="#UpdateAndEnd",role="button",data-toggle='modal')
+                            span#update_and_edit_i18n Update/Edit(OFF)
+                        #UpdateAndEnd.modal.hide.fade(tabindex='-1',role='dialog',aria-labelledby='myModalLabel',aria-hidden='true')
+                            div.modal-header(style='line-height:1.5em;')
+                                button.close(data-dismiss='modal') x
+                                span.confirm_i18n(style='font-size:12pt;') Confirm
+                            div.modal-body(style='line-height:1.3em;')
+                                - for(var j=0; j<cls.group.length; j++) {
+                                    div(class='modal-group'+j)
+                                - }
+                                form.form-inline(method='POST',action='/clayout')
+                                    #update_button_i18n
+                                        input.btn.btn-success(type='submit',value='Update')
+                                    input(type='hidden',name='delete',value='update')
+                                    input(type='hidden',name='lecCode',value=cls.lecCode)
+                                    input.glength(type='hidden',name='glength',value=cls.group.length)
+                                    - for(var j=0; j<cls.group.length; j++) {
+                                        input(class='input-group'+j,type='hidden',name='mgroup'+j)
+                                    - }
+                                    - var strCls = JSON.stringify(cls);
+                                    input(type='hidden',name='cls',value=strCls)
+                                form.form-inline(method='POST',action='/clayout')
+                                    #edit_back_button_i18n
+                                        input.btn.btn-success(type='submit',value='Update')
+                                    input(type='hidden',name='delete',value='back')
+                                    input(type='hidden',name='lecCode',value=cls.lecCode)
+                                    input.glength(type='hidden',name='glength',value=cls.group.length)
+                                    - for(var j=0; j<cls.group.length; j++) {
+                                        input(class='input-group'+j,type='hidden',name='mgroup'+j)
+                                    - }
+                                    - var strCls = JSON.stringify(cls);
+                                    input(type='hidden',name='cls',value=strCls)
+                                form.form-inline(method='GET',action='/home')
+                                    input(type='hidden',name='start',value='true')
+                                    #cancel_and_edit_off_i18n
+                                        input.btn.btn-success(type='submit',name='submit',value='CANCEL/Edit(OFF)')
+                            div.modal-footer
+            div(align="center",style="font-size:4.5em;color:#0B3382;line-height:1.3em;") #{cls.title}
+                span (#{cls.lecCode})
+            div(align='center',style='margin:10px 0;')
+                form.form-inline.open-LayoutGroup(method='POST',action='/clayout',style='display:inline-block;')
+                    button.btn.btn-success.open-LayoutGroup(type='submit') Save names
+                    input(type='hidden',name='delete',value='update')
+                    input(type='hidden',name='lecCode',value=cls.lecCode)
+                    input.glength(type='hidden',name='glength',value=cls.group.length)
+                    - for(var j=0; j<cls.group.length; j++) {
+                        input(class='input-group'+j,type='hidden',name='mgroup'+j)
+                    - }
+                    - var strCls = JSON.stringify(cls);
+                    input(type='hidden',name='cls',value=strCls)
+                span &nbsp;
+                form.form-inline.open-LayoutGroup(method='POST',action='/clayout',style='display:inline-block;margin-left:10px;')
+                    button.btn(type='submit') Back to lecture
+                    input(type='hidden',name='delete',value='back')
+                    input(type='hidden',name='lecCode',value=cls.lecCode)
+                    input.glength(type='hidden',name='glength',value=cls.group.length)
+                    - for(var j=0; j<cls.group.length; j++) {
+                        input(class='input-group'+j,type='hidden',name='mgroup'+j)
+                    - }
+                    - var strCls2 = JSON.stringify(cls);
+                    input(type='hidden',name='cls',value=strCls2)
+            p
+            table#ltable(border='0',cellspacing='0',cellpadding='0',width='100%')
+                tbody
+                   tr
+                      td(width='100%',valign='top',style='padding-right:0pt;padding-top:0pt')
+                           table(border='0',cellspacing='4',cellpadding='0',width='440',style='width:100.0%;')
+                               tbody
+                                   - for(var i=0; i<cls.group.length; i++) {
+                                       tr
+                                           td.righttitle2 #{i+1} &nbsp
+                                               a.open-LayoutGroup.btn(href='#dgrp'+(i),role='button',data-toggle='modal')
+                                                   i.icon-trash
+                                               div.modal.hide.fade(id='dgrp'+(i),tabindex='-1',role='dialog',aria-labelledy='myModalLabel',aria-hidden='true')
+                                                   div.modal-header
+                                                       button.close(data-dismiss='modal') x
+                                                       span.delete_i18n Delete
+                                                   div.modal-body(style='line-height:1.3em;')
+                                                       - for(var j=0; j<cls.group.length; j++) {
+                                                           div(class='modal-group'+j)
+                                                       - }
+                                                   div.modal-footer
+                                                       form.input-append(method='POST',action='/clayout')
+                                                           input(type='hidden',name='delete',value='dgroup')
+                                                           input(type='hidden',name='lecCode',value=cls.lecCode)
+                                                           - for(var j=0; j<cls.group.length; j++) {
+                                                               input(class='input-group'+j,type='hidden',name='mgroup'+j)
+                                                           - }
+                                                           - var strCls = JSON.stringify(cls);
+                                                           input(type='hidden',name='cls',value=strCls)
+                                                           input(type='hidden',name='i',value=i)
+                                                           input.btn(type='submit',name='submit',value='CANCEL')
+                                                           input.btn.btn-success(type='submit',name='submit',value='OK')
+                                               span &nbsp
+                                               a.open-LayoutGroup.btn(href='#cgrp'+(i),role='button',data-toggle='modal')
+                                                   i.icon-hand-down
+                                               div.modal.hide.fade(id='cgrp'+(i),tabindex='-1',role='dialog',aria-labelledy='myModalLabel',aria-hidden='true')
+                                                   div.modal-header
+                                                       button.close(data-dismiss='modal') x
+                                                       span.copy_i18n Copy
+                                                   div.modal-body(style='line-height:1.3em;')
+                                                       - for(var j=0; j<cls.group.length; j++) {
+                                                           div(class='modal-group'+j)
+                                                       - }
+                                                   div.modal-footer
+                                                       form.input-append(method='POST',action='/clayout')
+                                                           input(type='hidden',name='delete',value='cgroup')
+                                                           input(type='hidden',name='lecCode',value=cls.lecCode)
+                                                           input.glength(type='hidden',name='glength',value=cls.group.length)
+                                                           - for(var j=0; j<cls.group.length; j++) {
+                                                               input(class='input-group'+j,type='hidden',name='mgroup'+j)
+                                                           - }
+                                                           - var strCls = JSON.stringify(cls);
+                                                           input(type='hidden',name='cls',value=strCls)
+                                                           input(type='hidden',name='i',value=i)
+                                                           input.btn(type='submit',name='submit',value='CANCEL')
+                                                           input.btn.btn-success(type='submit',name='submit',value='OK')
+                                               span &nbsp
+                                               textarea(id='group'+(i),name='title',height='20',cols='70') #{cls.group[i].name}
+                                       - for(var j=0; j<cls.group[i].classes.length; j++) {
+                                           tr
+                                               td.rightcontents2
+                                                   img(border='0',width='10',height='10',src='img/redtri.gif')
+                                                   a.open-LayoutGroup.btn(href='#ditem'+(i)+(j),role='button',data-toggle='modal')
+                                                        i.icon-trash
+                                                   div.modal.hide.fade(id='ditem'+(i)+(j),tabindex='-1',role='dialog',aria-labelledy='myModalLabel',aria-hidden='true')
+                                                       div.modal-header
+                                                           button.close(data-dismiss='modal') x
+                                                           span.delete_i18n Delete
+                                                       div.modal-body(style='line-height:1.3em;')
+                                                           - for(var k=0; k<cls.group.length; k++) {
+                                                               div(class='modal-group'+k)
+                                                           - }
+                                                           span #{cls.group[i].classes[j].name}
+                                                       div.modal-footer
+                                                           form.input-append(method='POST',action='/clayout')
+                                                               input(type='hidden',name='delete',value='ditem')
+                                                               input(type='hidden',name='lecCode',value=cls.lecCode)
+                                                               input.glength(type='hidden',name='glength',value=cls.group.length)
+                                                               - for(var k=0; k<cls.group.length; k++) {
+                                                                   input(class='input-group'+k,type='hidden',name='mgroup'+k)
+                                                               - }
+                                                               - var strCls = JSON.stringify(cls);
+                                                               input(type='hidden',name='cls',value=strCls)
+                                                               input(type='hidden',name='i',value=i)
+                                                               input(type='hidden',name='j',value=j)
+                                                               input.btn(type='submit',name='submit',value='CANCEL')
+                                                               input.btn.btn-success(type='submit',name='submit',value='OK')
+                                                   span &nbsp
+                                                   a.open-LayoutGroup.btn(href='#citem'+(i)+(j),role='button',data-toggle='modal')
+                                                       i.icon-hand-down
+                                                   div.modal.hide.fade(id='citem'+(i)+(j),tabindex='-1',role='dialog',aria-labelledy='myModalLabel',aria-hidden='true')
+                                                       div.modal-header
+                                                           button.close(data-dismiss='modal') x
+                                                           span.copy_i18n Copy
+                                                       div.modal-body(style='line-height:1.3em;')
+                                                           - for(var k=0; k<cls.group.length; k++) {
+                                                               div(class='modal-group'+k)
+                                                           - }
+                                                           span #{cls.group[i].classes[j].name}
+                                                       div.modal-footer
+                                                           form.input-append(method='POST',action='/clayout')
+                                                               input(type='hidden',name='delete',value='citem')
+                                                               input(type='hidden',name='lecCode',value=cls.lecCode)
+                                                               input.glength(type='hidden',name='glength',value=cls.group.length)
+                                                               - for(var k=0; k<cls.group.length; k++) {
+                                                                   input(class='input-group'+k,type='hidden',name='mgroup'+k)
+                                                               - }
+                                                               - var strCls = JSON.stringify(cls);
+                                                               input(type='hidden',name='cls',value=strCls)
+                                                               input(type='hidden',name='i',value=i)
+                                                               input(type='hidden',name='j',value=j)
+                                                               input.btn(type='submit',name='submit',value='CANCEL')
+                                                               input.btn.btn-success(type='submit',name='submit',value='OK')
+                                                   span &nbsp
+                                                   - var n=cls.group[i].classes[j].name;
+                                                   input.class-item(id='class'+i+'_'+j,type='text',value=n,style='font-size:0.9em;width:220px;vertical-align:middle;')
+                                                   span &nbsp
+                                                   - if(n!=="None") {
+                                                       a.open-LayoutGroup.btn(href="#conts"+(i)+(j),role='button',data-toggle='modal',title='open content') →
+                                                       .modal.hide.fade(id='conts'+(i)+(j),tabindex='-1',role='dialog',aria-labelledby='myModalLabel',aria-hidden='true')
+                                                           div.modal-header
+                                                               button.close(data-dismiss='modal') x
+                                                               span #{n}
+                                                           div.modal-body
+                                                               - for(var k=0; k<cls.group.length; k++) {
+                                                                   div(class='modal-group'+k)
+                                                               - }
+                                                           div.modal-footer
+                                                               form.input-append(method="POST",action='/clayout')
+                                                                   input(type='hidden',name='delete',value='contents')
+                                                                   input(type='hidden',name='Code',value=n)
+                                                                   input.glength(type='hidden',name='glength',value=cls.group.length)
+                                                                   - for(var k=0; k<cls.group.length; k++) {
+                                                                       input(class='input-group'+k,type='hidden',name='mgroup'+k)
+                                                                   - }
+                                                                   - var strCls = JSON.stringify(cls);
+                                                                   input(type='hidden',name='cls',value=strCls)
+                                                                   input(type='hidden',name='i',value=i)
+                                                                   input(type='hidden',name='j',value=j)
+                                                                   input.btn(type='submit',name='submit',value='CANCEL')
+                                                                   input.btn.btn-success(type='submit',name='submit',value='OK')
+                                                   - } else {
+                                                       a.open-LayoutGroup.btn(href="#none"+(i)+(j),role='button',data-toggle='modal',title='new content') ＋
+                                                       .modal.hide.fade(id='none'+(i)+(j),tabindex='-1',role='dialog',aria-labelledby='myModalLabel',aria-hidden='true')
+                                                           div.modal-header
+                                                               button.close(data-dismiss='modal') x
+                                                               span #{n}
+                                                           div.modal-body
+                                                               - for(var k=0; k<cls.group.length; k++) {
+                                                                   div(class='modal-group'+k)
+                                                               - }
+                                                           div.modal-footer
+                                                               form.input-append(method="POST",action='/clayout')
+                                                                   input(type='hidden',name='delete',value='ncontents')
+                                                                   input(type='hidden',name='lecCode',value=cls.lecCode)
+                                                                   input.glength(type='hidden',name='glength',value=cls.group.length)
+                                                                   - for(var k=0; k<cls.group.length; k++) {
+                                                                       input(class='input-group'+k,type='hidden',name='mgroup'+k)
+                                                                   - }
+                                                                   - var strCls = JSON.stringify(cls);
+                                                                   input(type='hidden',name='cls',value=strCls)
+                                                                   input(type='hidden',name='i',value=i)
+                                                                   input(type='hidden',name='j',value=j)
+                                                                   input.btn(type='submit',name='submit',value='CANCEL')
+                                                                   input.btn.btn-success(type='submit',name='submit',value='OK')
+                                                   - }
+                                       - };
+                                   - };
+        hr
+        div(align='right')
+            table
+                tr
+                    td
+                        #author_name_i18n(style='font-size:2em;color:#0B3382;')
+                    td
+                        span(style='font-size:2em;color:#0B3382;') #{name}
+                    td
+                        span(style='font-size:2em;color:#0B3382;') [#{cls.lang}]
+        hr
+        p
+            div(align='center') Last update: Sun Dec  9 11:44:59 PST 2012 by
+                span(style='vertical-align:3pt;')
+                    img(src="img/logo231.gif",width="87",height="27",alt="yass@hosei.ac.jp")
+
+    include modals/alert
+    include modals/lost-password
+
+block scripts
+    script(src='/vendor/jquery/jquery-1.8.1.min.js')
+    script(src='/vendor/jquery/jquery.i18n.properties-1.0.9.js')
+    script(src='/vendor/jquery.form.js')
+    script(src='/vendor/bootstrap-modal.js')
+    script(src='/vendor/bootstrap-transition.js')
+    script(src='/js/views/clayout.js')
+    script(src='/js/controllers/loginController.js')
+    script(src='/js/controllers/homeController.js')
+    script(src='/js/form-validators/loginValidator.js')
+    script(src='/js/form-validators/emailValidator.js')

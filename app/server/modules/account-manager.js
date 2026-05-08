@@ -1,13 +1,22 @@
-var bcrypt = require('bcrypt')
+var bcrypt = require('bcryptjs')
 var mongoose = require('mongoose');
 /* heroku */
 //var db = mongoose.createConnection();
 /* heroku */
-var db = mongoose.createConnection('localhost', 'login-testing');
+var db = mongoose.createConnection('mongodb://127.0.0.1/login-testing');
 var Schema = mongoose.Schema;
 var mongoUri = process.env.MONGOLAB_URI ||
 		process.env.MONGOHQ_URL ||
 	    'mongodb://localhost/login';
+
+// Define the schema and model once at module load to avoid OverwriteModelError.
+var accountsSchema = new Schema({ name:    { type: String, required: true },
+                                  email:   { type: String, required: true },
+                                  user:    { type: String, required: true },
+                                  pass:    { type: String, required: true },
+                                  country: { type: String, required: true },
+                                  date:    { type: String, required: true } });
+var Accounts = db.model('Accounts', accountsSchema);
 /* heroku */
 //db.open(mongoUri,function(err){
 //	if(err){
@@ -39,15 +48,6 @@ var AM = {};
 module.exports = AM;
 
 AM.autoLogin = function(user, pass, callback) {
-    var accountsSchema = new Schema({ name: { type: String, required: true },
-				      email: { type: String, required: true },
-				      user: { type: String, required: true },
-				      pass: { type: String, required: true },
-				      country: { type: String, required: true },
-				      date: { type: String, required: true } });
-    var Accounts = db.model('Accounts',accountsSchema);
-    var accounts = new Accounts();
-
     Accounts.findOne({user:user}, function(e, o) {
     		if (o){
     			o.pass == pass ? callback(o) : callback(null);
@@ -58,14 +58,6 @@ AM.autoLogin = function(user, pass, callback) {
 }
 
 AM.manualLogin = function(user, pass, callback) {
-    var accountsSchema = new Schema({ name: { type: String, required: true },
-				      email: { type: String, required: true },
-				      user: { type: String, required: true },
-				      pass: { type: String, required: true },
-				      country: { type: String, required: true },
-				      date: { type: String, required: true } });
-    var Accounts = db.model('Accounts',accountsSchema);
-    var accounts = new Accounts();
     Accounts.findOne({user:user}, function(e, o) {
         if (o == null){
             callback('user-not-found');
@@ -85,13 +77,6 @@ console.log('OK!');
 // record insertion, update & deletion methods //
 AM.signup = function(newData, callback)
 {
-    var accountsSchema = new Schema({ name: { type: String, required: true },
-				      email: { type: String, required: true },
-				      user: { type: String, required: true },
-				      pass: { type: String, required: true },
-				      country: { type: String, required: true },
-				      date: { type: String, required: true } });
-    var Accounts = db.model('Accounts',accountsSchema);
     var accounts = new Accounts();
     Accounts.findOne({user:newData.user}, function(e, o) {
 	if (o) {
@@ -140,14 +125,6 @@ AM.signup = function(newData, callback)
 
 AM.update = function(newData, callback)
 {
-    var accountsSchema = new Schema({ name: { type: String, required: true },
-				      email: { type: String, required: true },
-				      user: { type: String, required: true },
-				      pass: { type: String, required: true },
-				      country: { type: String, required: true },
-				      date: { type: String, required: true } });
-    var Accounts = db.model('Accounts',accountsSchema);
-    var accounts = new Accounts();
     Accounts.findOne({user:newData.user}, function(e, o){
     		o.name 		= newData.name;
     		o.email 	= newData.email;
@@ -179,14 +156,6 @@ AM.update = function(newData, callback)
 
 AM.setPassword = function(email, newPass, callback)
 {
-    var accountsSchema = new Schema({ name: { type: String, required: true },
-				      email: { type: String, required: true },
-				      user: { type: String, required: true },
-				      pass: { type: String, required: true },
-				      country: { type: String, required: true },
-				      date: { type: String, required: true } });
-    var Accounts = db.model('Accounts',accountsSchema);
-    var accounts = new Accounts();
     Accounts.findOne({email:email}, function(e, o){
     		AM.saltAndHash(newPass, function(hash){
     			o.pass = hash;
@@ -204,14 +173,6 @@ AM.setPassword = function(email, newPass, callback)
 
 AM.validateLink = function(email, passHash, callback)
 {
-    var accountsSchema = new Schema({ name: { type: String, required: true },
-				      email: { type: String, required: true },
-				      user: { type: String, required: true },
-				      pass: { type: String, required: true },
-				      country: { type: String, required: true },
-				      date: { type: String, required: true } });
-    var Accounts = db.model('Accounts',accountsSchema);
-    var accounts = new Accounts();
     Accounts.find({ $and: [{email:email, pass:passHash}] }, function(e, o){
         callback(o ? 'ok' : null);
 	});
@@ -232,15 +193,6 @@ AM.saltAndHash = function(pass, callback)
 
 AM.delete = function(id, callback)
 {
-    var accountsSchema = new Schema({ name: { type: String, required: true },
-				      email: { type: String, required: true },
-				      user: { type: String, required: true },
-				      pass: { type: String, required: true },
-				      country: { type: String, required: true },
-				      date: { type: String, required: true } });
-    var Accounts = db.model('Accounts',accountsSchema);
-
-    var accounts = new Accounts();
     Accounts.remove({_id: this.getObjectId(id)}, callback);
     //    AM.accounts.remove({_id: this.getObjectId(id)}, callback);
 }
@@ -249,14 +201,6 @@ AM.delete = function(id, callback)
 
 AM.getEmail = function(email, callback)
 {
-    var accountsSchema = new Schema({ name: { type: String, required: true },
-				      email: { type: String, required: true },
-				      user: { type: String, required: true },
-				      pass: { type: String, required: true },
-				      country: { type: String, required: true },
-				      date: { type: String, required: true } });
-    var Accounts = db.model('Accounts',accountsSchema);
-    var accounts = new Accounts();
     Accounts.findOne({email:email}, function(e, o){ callback(o); });
     //	AM.accounts.findOne({email:email}, function(e, o){ callback(o); });
 }
@@ -267,26 +211,11 @@ AM.getObjectId = function(id)
 }
 
 AM.getAccounts = function() {
-    var accountsSchema = new Schema({ name: { type: String, required: true },
-				      email: { type: String, required: true },
-				      user: { type: String, required: true },
-				      pass: { type: String, required: true },
-				      country: { type: String, required: true },
-				      date: { type: String, required: true } });
-    var Accounts = db.model('Accounts',accountsSchema);
     return Accounts;
 }
 
 AM.getAllRecords = function(callback)
 {
-    var accountsSchema = new Schema({ name: { type: String, required: true },
-				      email: { type: String, required: true },
-				      user: { type: String, required: true },
-				      pass: { type: String, required: true },
-				      country: { type: String, required: true },
-				      date: { type: String, required: true } });
-    var Accounts = db.model('Accounts',accountsSchema);
-    var accounts = new Accounts();
     Accounts.find({},function(err,docs) {
 	    console.log(docs);
 	    if (err) callback(err)
@@ -302,14 +231,6 @@ AM.getAllRecords = function(callback)
 
 AM.delAllRecords = function(id, callback)
 {
-    var accountsSchema = new Schema({ name: { type: String, required: true },
-				      email: { type: String, required: true },
-				      user: { type: String, required: true },
-				      pass: { type: String, required: true },
-				      country: { type: String, required: true },
-				      date: { type: String, required: true } });
-    var Accounts = db.model('Accounts',accountsSchema);
-    var accounts = new Accounts();
     Accounts.remove(); // reset accounts collection for testing //
     //	AM.accounts.remove(); // reset accounts collection for testing //
 }
@@ -318,15 +239,6 @@ AM.delAllRecords = function(id, callback)
 
 AM.findById = function(id, callback)
 {
-    var accountsSchema = new Schema({ name: { type: String, required: true },
-				      email: { type: String, required: true },
-				      user: { type: String, required: true },
-				      pass: { type: String, required: true },
-				      country: { type: String, required: true },
-				      date: { type: String, required: true } });
-    var Accounts = db.model('Accounts',accountsSchema);
-    var accounts = new Accounts();
-
     Accounts.findOne({_id: this.getObjectId(id)},
         function(e, res) {
     		if (e) callback(e)
@@ -344,14 +256,6 @@ AM.findById = function(id, callback)
 AM.findByMultipleFields = function(a, callback)
 {
 // this takes an array of name/val pairs to search against {fieldName : 'value'} //
-    var accountsSchema = new Schema({ name: { type: String, required: true },
-				      email: { type: String, required: true },
-				      user: { type: String, required: true },
-				      pass: { type: String, required: true },
-				      country: { type: String, required: true },
-				      date: { type: String, required: true } });
-    var Accounts = db.model('Accounts',accountsSchema);
-    var accounts = new Accounts();
     Accounts.find( { $or : a } ).toArray(
     		function(e, results) {
     		if (e) callback(e)

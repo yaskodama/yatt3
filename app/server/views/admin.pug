@@ -1,0 +1,213 @@
+extends layout2
+
+block content
+    table
+        tr
+            td(width='600',align='left')
+                #langbox
+                    span#language_i18n Language:
+                    select#lang
+                    span#langbrowser
+    #wrapper.ui-widget-content.ui-corner-all
+        p
+            #welcome_i18n(align='center',style='font-family:Century,Lucida Sans Unicode,sans-serif;font-size:4.4em;line-height:1.1em;color:#47FFFC;') Welcome to YaTT
+        #accounts_name_i18n.subtitle Accounts
+        p
+            .contents
+                table#lecture_list.table(align='center')
+                    thead
+                        tr
+                              th(style='width:30px') #
+                              th(style='width:30px') Icon
+                              th(style='width:200px') Name
+                              th(style='width:80px') Location
+                              th(style='width:100px') Username
+                              th Account Created
+                    tbody
+                        - for(var i=0; i<accts.length; i++) {
+                            tr
+                                td #{i+1}
+                                td
+                                    a.btn(href='#acc'+(i),role='button',data-toggle='modal')
+                                        i.icon-trash
+                                    div.modal.hide.fade(id='acc'+(i),tabindex='-1',role='dialog',aria-labelledy='myModalLabel',aria-hidden='true')
+                                        div.modal-header
+                                            button.close(data-dismiss='modal') x
+                                            span.delete_i18n Delete
+                                        div.modal-body(style='line-height:1.5em;')
+                                            span #{accts[i].user}
+                                        div.modal-footer
+                                            form.input-append(method='POST')
+                                                input(type='hidden',name='delete',value='accts')
+                                                input(type='hidden',name='user',value=(accts[i].user))
+                                                input.btn(type='submit',name='submit',value='CANCEL')
+                                                input.btn.btn-success(type='submit',name='submit',value='OK')
+                                td #{accts[i].name}
+                                td #{accts[i].country}
+                                td #{accts[i].user}
+                                td #{accts[i].date}
+                        - };
+        #timetable_i18n.subtitle Time Table
+        p
+            .contents
+                table#lecture_list.table(align='center')
+                    thead
+                        tr
+                            th(style='width:30px') #
+                            th(style='width:30px') Icon
+                            th(style='width:70px') Author
+                            th Lectures List
+                    tbody
+                        - for(var i=0; i<lecs.length; i++) {
+                            tr
+                                td #{i+1}
+                                td
+                                    a.btn(href='#tt'+(i),role='button',data-toggle='modal')
+                                        i.icon-trash
+                                    div.modal.hide.fade(id='tt'+(i),tabindex='-1',role='dialog',aria-labelledy='myModalLabel',aria-hidden='true')
+                                        div.modal-header
+                                            button.close(data-dismiss='modal') x
+                                            span.delete_i18n Delete
+                                        div.modal-body(style='line-height:1.5em;')
+                                            span #{lecs[i].name}
+                                        div.modal-footer
+                                            form.input-append(method='POST')
+                                                input(type='hidden',name='delete',value='lecs')
+                                                input(type='hidden',name='user',value=(lecs[i].name))
+                                                input.btn(type='submit',name='submit',value='CANCEL')
+                                                input.btn.btn-success(type='submit',name='submit',value='OK')
+                                td #{lecs[i].name}
+                                - for(var j=0; j<lecs[i].lecs.length; j++) {
+                                - var l = lecs[i].lecs[j];
+                                    td(style='font-size:9pt') (#{l.week},#{l.time},#{l.lecCode})
+                                - }
+                        - };
+        #lectures_i18n.subtitle Lectures
+        p
+            .contents
+                table#lecture_list.table(align='center')
+                    thead
+                        tr
+                            th(style='width:30px') Icon
+                            th(style='width:100px') Code
+                            th(style='width:170px') Title
+                            th(style='width:70px') Author
+                            th(style='width:50px') Lang
+                            th Lecture Created
+                    tbody
+                        - leclist.forEach(function(f) {
+                            tr
+                              td
+                                 a.btn(href='#'+(f.lecCode),role='button',data-toggle='modal')
+                                     i.icon-trash
+                                 div.modal.hide.fade(id=(f.lecCode),tabindex='-1',role='dialog',aria-labelledy='myModalLabel',aria-hidden='true')
+                                     div.modal-header
+                                         button.close(data-dismiss='modal') x
+                                         span.delete_i18n Delete
+                                     div.modal-body(style='line-height:1.5em;')
+                                         span #{f.lecCode}
+                                     div.modal-footer
+                                         form.input-append(method='POST')
+                                             input(type='hidden',name='delete',value='list')
+                                             input(type='hidden',name='Code',value=f.lecCode)
+                                             input.btn(type='submit',name='submit',value='CANCEL')
+                                             input.btn.btn-success(type='submit',name='submit',value='OK')
+                              td #{f.lecCode}
+                              td #{f.title}
+                              td #{f.author}
+                              td #{f.lang}
+                              td #{f.date}
+                        - });
+        #library_i18n.subtitle Library
+        p
+            .contents
+                table#lecture_list.table(align='center')
+                    thead
+                        tr
+                            th(style='width:30px') Icon
+                            th(style='width:100px') Code
+                            th(style='width:150px') Title
+                            th(style='width:70px') Author
+                            th(style='width:30px') Sign
+                            th(style='width:30px') Lang
+                            th Url
+                    tbody
+                        - cnts.forEach(function(f) {
+                            tr
+                              td
+                                 a.btn(href='#'+(f._id),role='button',data-toggle='modal')
+                                     i.icon-trash
+                                 div.modal.hide.fade(id=(f._id),tabindex='-1',role='dialog',aria-labelledy='myModalLabel',aria-hidden='true')
+                                     div.modal-header
+                                         button.close(data-dismiss='modal') x
+                                         span.delete_i18n Delete
+                                     div.modal-body(style='line-height:1.5em;')
+                                         span #{f.cntCode}
+                                     div.modal-footer
+                                         form.input-append(method='POST')
+                                             input(type='hidden',name='delete',value='contents')
+                                             input(type='hidden',name='Code',value=f.cntCode)
+                                             input.btn(type='submit',name='submit',value='CANCEL')
+                                             input.btn.btn-success(type='submit',name='submit',value='OK')
+                              td #{f.cntCode}
+                              td #{f.title}
+                              td #{f.author}
+                              td #{f.sign}
+                              td #{f.lang}
+                              td #{f.url}
+                        - });
+        #log_title_i18n.subtitle Log
+        p
+            .contents
+                table#lecture_list.table(align='center')
+                    thead
+                          tr
+                              th(style='width:30px') #
+                              th(style='width:30px') Icon
+                              th(style='width:150px') Name
+                              th(style='width:80px') SignIn/SignOut
+                              th Access Date
+                    tbody
+                        - for(var i=0; i<logs.length; i++) {
+                            tr
+                                td #{i+1}
+                                td
+                                    a.btn(href='#log'+(i),role='button',data-toggle='modal')
+                                        i.icon-trash
+                                    div.modal.hide.fade(id='log'+(i),tabindex='-1',role='dialog',aria-labelledby='myModalLabel',aria-hidden='true')
+                                        div.modal-header(style='line-height:1.5em;')
+                                            button.close(data-dismiss='modal') x
+                                            span.delete_i18n Delete
+                                        div.modal-body(style='line-height:1.5em;')
+                                            span #{logs[i].date}
+                                        div.modal-footer
+                                            form.input-append(method='POST')
+                                                input(type='hidden',name='delete',value='true')
+                                                input(type='hidden',name='id',value=(logs[i]._id))
+                                                input(type='hidden',name='date',value=(logs[i].date))
+                                                input.btn(type='submit',name='submit',value='CANCEL')
+                                                input.btn.btn-success(type='submit',name='submit',value='OK')
+                                td #{logs[i].name}
+                                td #{logs[i].login}
+                                td #{logs[i].date}
+                        - };
+        hr
+        p
+            div(align='center') Last update: Sun Dec  9 11:44:59 PST 2012 by
+                span(style='vertical-align:3pt;')
+                    img(src="img/logo231.gif",width="87",height="27",alt="yass@hosei.ac.jp")
+
+    include modals/alert
+    include modals/lost-password
+
+block scripts
+    script(src='/vendor/jquery/jquery-1.8.1.min.js')
+    script(src='/vendor/jquery/jquery.i18n.properties-1.0.9.js')
+    script(src='/vendor/jquery.form.js')
+    script(src='/vendor/bootstrap-modal.js')
+    script(src='/vendor/bootstrap-transition.js')
+    script(src='/js/views/login.js')
+    script(src='/js/controllers/loginController.js')
+    script(src='/js/controllers/homeController.js')
+    script(src='/js/form-validators/loginValidator.js')
+    script(src='/js/form-validators/emailValidator.js')

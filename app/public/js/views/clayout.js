@@ -12,6 +12,25 @@ $(document).ready(function(){
 	    jQuery('.modal-group'+i).empty().append(jQuery('#group'+i)[0].value);
             jQuery('.input-group'+i).attr({value:jQuery('#group'+i)[0].value});
 	}
+	// Capture class-item textarea values and inject them into every /clayout form.
+	var classData = {};
+	jQuery('.class-item').each(function() {
+	    var m = this.id.match(/^class(\d+)_(\d+)$/);
+	    if (!m) return;
+	    classData['mclass_' + m[1] + '_' + m[2]] = this.value;
+	});
+	jQuery('form[action="/clayout"]').each(function() {
+	    var $form = jQuery(this);
+	    for (var name in classData) {
+		var existing = $form.find('input[name="' + name + '"]');
+		if (existing.length > 0) {
+		    existing.val(classData[name]);
+		} else {
+		    var input = jQuery('<input type="hidden">').attr('name', name).val(classData[name]);
+		    $form.append(input);
+		}
+	    }
+	});
 	});
     jQuery('.open-ContentsGroup').click(function() {
 	if(jQuery('#Code').is('*')) jQuery('#input-cntcode').attr({value: jQuery('#Code')[0].value });

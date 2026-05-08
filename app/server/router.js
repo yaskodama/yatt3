@@ -24,16 +24,16 @@ module.exports = function(app) {
 	}
         });
     app.post('/', function(req, res){
-        AM.manualLogin(req.param('user'), req.param('pass'), function(e, o){
+        AM.manualLogin((req.body['user'] || req.query['user']), (req.body['pass'] || req.query['pass']), function(e, o){
 	    if (!o){
-		res.send(e, 400);
+		res.status(400).send(e);
 	    } else {
 		req.session.user = o;
-		if (req.param('remember-me') == 'true') {
+		if ((req.body['remember-me'] || req.query['remember-me']) == 'true') {
 		    res.cookie('user', o.user, { maxAge: 900000 });
 		    res.cookie('pass', o.pass, { maxAge: 900000 });
 		}
-		res.send(o, 200);
+		res.status(200).send(o);
 	    }
 	});
         });
@@ -57,7 +57,7 @@ module.exports = function(app) {
 				{ upsert:false,multi:false}, function(err) {
 		    if(err) {
 			console.log(err);
-			res.send(err,400);
+			res.status(400).send(err);
 		    } else {
 			REC.findEdit(req.session.user.user, req.session.id, res);
 		    }
@@ -67,7 +67,7 @@ module.exports = function(app) {
 		    if(err) {
 			alert(err);
 			console.log(err);
-			res.send(err,400);
+			res.status(400).send(err);
 		    } else {
 			;
 		    }
@@ -120,15 +120,31 @@ module.exports = function(app) {
 	});
     app.get('/citem', function(req, res) {    /* /citem + "GET" */
 	var Contents = REC.getContents();
-	Contents.find({cntCode:req.query.p}, function(e,docs) {
+	var cntCode = req.query.p;
+	var userName = (req.session.user && req.session.user.user) || 'Guest';
+	Contents.find({cntCode:cntCode}, function(e,docs) {
 	    if(docs[0]==undefined) {
-		res.render('404', {title:'Page Not Found'});
+		// Auto-create a stub Contents doc so the user can fill it in.
+		REC.newContents(cntCode, userName, '', function(err) {
+		    if(err) { res.status(400).send(err); return; }
+		    Contents.findOne({cntCode:cntCode}, function(e2, doc2) {
+			if(!doc2) { res.render('404', {title:'Page Not Found'}); return; }
+			res.render('citem', { message:'Contents mode!', name: userName,
+			    id: req.session.id, contents: doc2, title: "Welcome to YaTT" });
+		    });
+		});
 	    } else {
-	        res.render('citem', { message:'Contents mode!', name:'Guest',
+	        res.render('citem', { message:'Contents mode!', name: userName,
 		    id: req.session.id, contents: docs[0], title: "Welcome to YaTT" });
 	    }
             });
 	});
+    app.get('/lecture', function(req, res) {
+        if (req.session.user == null) { res.redirect('/'); return; }
+        var lecCode = req.query.p;
+        if (!lecCode) { res.redirect('/edit'); return; }
+        REC.findLecture(lecCode, req.session.user.user, req.session.id, res);
+    });
     app.post('/lecture', function(req, res) {
         if (req.session.user == null){
             res.redirect('/');
@@ -151,7 +167,7 @@ console.log(req.body.submit);
 		    	textbook: req.body.textbook }}, {upsert:false,multi:false}, function(err){
 			if(err) {
 			    console.log(err);
-			    res.send(err,400);
+			    res.status(400).send(err);
 			} else {
 			        if(req.body.layout=='back') {
 				    var Lectures = REC.getLectures();
@@ -182,13 +198,12 @@ console.log(req.body.submit);
 						var Contents = REC.getContents();
 						var cnts = [];
 						Contents.find({}, function(e,d) {
-						    if(d[0]==undefined) {
-							res.render('404', {title: 'Page Not Found'});
-						    } else {
+						    d = d || [];
+						    {
 							for(var i=0;i<50;i++) cnts[i]={ name:"", cntCode:"", sign:"", url:"" };
 							var ii=0;
-							docs[0].group.forEach(function(f) {
-	       						    f.classes.forEach(function(c) {
+							(docs[0].group || []).forEach(function(f) {
+	       						    (f.classes || []).forEach(function(c) {
 								var n = 'None'; var s = 1; var u = "";
 								for(i=0;i<d.length;i++) {
 								    if(d[i].cntCode==c.name) {
@@ -217,12 +232,12 @@ console.log(req.body.submit);
 			{ upsert:false,multi:false}, function(err) {
 			if(err) {
 			    console.log(err);
-			    res.send(err,400);
+			    res.status(400).send(err);
 			} else {
 			    var Classes = REC.newClasses(req.body.Code,req.session.user.user,function(e) {
 				if(e){
 			            console.log(e);
-				    res.send(e,400);
+				    res.status(400).send(e);
 			    	} else {
 				    REC.findLecture(req.body.Code,req.session.user.user,req.session.id,res);
 				}
@@ -244,7 +259,7 @@ console.log(req.body.submit);
 		if(docs[0]==undefined) {
 		    var Lectures = REC.saveLectures(req.session.user.user,function(err){
 			if(err) {
-			    res.send(err,400);
+			    res.status(400).send(err);
 			} else {
 			    REC.findHome(req.session.user.user,req.session.id,res);
 			}
@@ -256,13 +271,13 @@ console.log(req.body.submit);
 	}
 	});
     app.post('/home', function(req, res){
-        if (req.param('user') != undefined) {
+        if ((req.body['user'] || req.query['user']) != undefined) {
     	    AM.update({
-	        user 		: req.param('user'),
-	        name 		: req.param('name'),
-		email 		: req.param('email'),
-		country 	: req.param('country'),
-		pass		: req.param('pass')
+	        user 		: (req.body['user'] || req.query['user']),
+	        name 		: (req.body['name'] || req.query['name']),
+		email 		: (req.body['email'] || req.query['email']),
+		country 	: (req.body['country'] || req.query['country']),
+		pass		: (req.body['pass'] || req.query['pass'])
 	    }, function(o){
 		if (o){
 		    req.session.user = o;
@@ -270,15 +285,15 @@ console.log(req.body.submit);
        			res.cookie('user', o.user, { maxAge: 900000 });
 			res.cookie('pass', o.pass, { maxAge: 900000 });	
 		    }
-		    res.send('ok', 200);
+		    res.status(200).send('ok');
 		} else {
-		    res.send('error-updating-account', 400);
+		    res.status(400).send('error-updating-account');
 		}
 	    });
-	} else if (req.param('logout') == 'true'){
+	} else if ((req.body['logout'] || req.query['logout']) == 'true'){
 	    res.clearCookie('user');
 	    res.clearCookie('pass');
-	    req.session.destroy(function(e){ res.send('ok', 200); });
+	    req.session.destroy(function(e){ res.status(200).send('ok'); });
 	}
 	});
     app.get('/signup', function(req, res) {
@@ -286,36 +301,36 @@ console.log(req.body.submit);
 	});
     app.post('/signup', function(req, res){
 	AM.signup({
-	    name 	: req.param('name'),
-	    email 	: req.param('email'),
-	    user 	: req.param('user'),
-	    pass	: req.param('pass'),
-	    country : req.param('country')
+	    name 	: (req.body['name'] || req.query['name']),
+	    email 	: (req.body['email'] || req.query['email']),
+	    user 	: (req.body['user'] || req.query['user']),
+	    pass	: (req.body['pass'] || req.query['pass']),
+	    country : (req.body['country'] || req.query['country'])
 	}, function(e, o){
 	    if (e){
-		res.send(e, 400);
+		res.status(400).send(e);
 	    } else {
-		res.send('ok', 200);
+		res.status(200).send('ok');
 	    }
 	});
 	});
     app.post('/lost-password', function(req, res){
     // look up the user's account via their email //
-	AM.getEmail(req.param('email'), function(o){
+	AM.getEmail((req.body['email'] || req.query['email']), function(o){
 	    if (o){
-		res.send('ok', 200);
+		res.status(200).send('ok');
 		EM.dispatchResetPasswordLink(o, function(e, m){
 		// this callback takes a moment to return //
 		// should add an ajax loader to give user feedback //
 		    if (!e) {
-		//	res.send('ok', 200);
+		//	res.status(200).send('ok');
 		    } else {
-		    	res.send('email-server-error', 400);
+		    	res.status(400).send('email-server-error');
 		    	for (k in e) console.log('error : ', k, e[k]);
 		    }
 	        });
 	    } else {
-		res.send('email-not-found', 400);
+		res.status(400).send('email-not-found');
 	    }
 	});
 	});
@@ -333,16 +348,16 @@ console.log(req.body.submit);
 	})
 	});
     app.post('/reset-password', function(req, res) {
-	var nPass = req.param('pass');
+	var nPass = (req.body['pass'] || req.query['pass']);
 	// retrieve the user's email from the session to lookup their account and reset password //
 	var email = req.session.reset.email;
 	// destory the session immediately after retrieving the stored email //
 	req.session.destroy();
 	AM.setPassword(email, nPass, function(o){
 	    if (o){
-	    	res.send('ok', 200);
+	    	res.status(200).send('ok');
 	    } else{
-	    	res.send('unable to update password', 400);
+	    	res.status(400).send('unable to update password');
 	    }
 	})
         });
@@ -397,6 +412,19 @@ console.log(req.body.submit);
 	grp[inum].classes = cret;
 	return grp;
     }
+    app.get('/clayout', function(req, res) {
+        if (req.session.user == null) { res.redirect('/'); return; }
+        var Classes = REC.getClasses();
+        Classes.find({lecCode: req.query.p}, function(e, docs) {
+            if (docs[0] == undefined) {
+                res.render('404', {title: 'Page Not Found'});
+            } else {
+                res.render('clayout', { title : 'Contents Layout',
+                    message: 'Edit Contents Layout:' + req.session.user.user,
+                    name: req.session.user.user, cls: docs[0] });
+            }
+        });
+    });
     app.post('/clayout', function(req, res) {
         if (req.session.user == null){
             res.redirect('/');
@@ -417,7 +445,17 @@ for(i=0;i<req.body.glength;i++) {
 	    var flag = false;
 	    for(var i=0; i<req.body.glength; i++) {
 		newCls.group[i].name=req.body['mgroup'+i];
-	    }            
+	    }
+	    // Apply class-item renames captured from textareas via clayout.js.
+	    for(var ii=0; ii<newCls.group.length; ii++) {
+		var classes = newCls.group[ii].classes || [];
+		for(var jj=0; jj<classes.length; jj++) {
+		    var key = 'mclass_' + ii + '_' + jj;
+		    if(req.body[key] !== undefined && req.body[key].length > 0) {
+			newCls.group[ii].classes[jj].name = req.body[key];
+		    }
+		}
+	    }
 	    if(req.body.delete === "cgroup" && req.body.submit === "OK") {
 		var grp = duplicate(newCls.group,req.body.i);
 		flag = true;
@@ -441,7 +479,7 @@ for(i=0;i<req.body.glength;i++) {
 			{ $set: {group:grp} }, {upsert:false,multi:false}, function(err) {
 			if(err) {
 			    console.log(err);
-			    res.send(err,400);
+			    res.status(400).send(err);
 			} else {
 			    if(req.body.delete==='back') {
 				REC.findLecture(req.body.lecCode,req.session.user.user,req.session.id,res);
@@ -530,12 +568,12 @@ console.log(req.body.type);
 			{ $set: {group:newGrp} }, {upsert:false,multi:false}, function(err) {
 			if(err) {
 			    console.log(err);
-			    res.send(err,400);
+			    res.status(400).send(err);
 			} else {
 			    REC.newContents(req.body.Code,req.session.user.user,req.body.url,function(e) {
 				if(e) {
 				    console.log(e);
-				    res.send(e,400);
+				    res.status(400).send(e);
 				} else {
 				    Contents.find({cntCode:req.body.Code}, function(e,docs) {
 					if(docs[0]==undefined) {
@@ -558,7 +596,7 @@ console.log(req.body.type);
 		    {upsert:false,multi:false}, function(err) {
 		    if(err) {
 			console.log(err);
-			res.send(err,400);
+			res.status(400).send(err);
 		    } else {
 			Contents.find({cntCode:req.body.Code}, function(e,docs) {
 			    if(docs[0]==undefined) {
@@ -577,7 +615,7 @@ console.log(req.body.type);
 		    {upsert:false,multi:false}, function(err) {
 		    if(err) {
 			console.log(err);
-			res.send(err,400);
+			res.status(400).send(err);
 		    } else {
 			REC.findEdit(req.session.user.user, req.session.id, res);
 		    }
@@ -588,7 +626,7 @@ console.log(req.body.type);
 		    {upsert:false,multi:false}, function(err) {
 		    if(err) {
 			console.log(err);
-			res.send(err,400);
+			res.status(400).send(err);
 		    } else {
 			Classes.find( {lecCode:req.body.lecCode}, function(e,docs) {
 		    	    if(docs[0]==undefined) {
@@ -653,7 +691,7 @@ console.log(req.body.type);
 			    	res.render('admin', { title : 'Administration', cnts:cnts, accts:accounts,
 			            logs: docs, lecs: lecs, leclist: leclist } );
 			    } else {
-			    	res.send('accounts not found', 400);
+			    	res.status(400).send('accounts not found');
 			    }
 			    });
 			});
@@ -666,9 +704,9 @@ console.log(req.body.type);
 	    if (!e){
 	    	res.clearCookie('user');
 	    	res.clearCookie('pass');
-	    	req.session.destroy(function(e){ res.send('ok', 200); });
+	    	req.session.destroy(function(e){ res.status(200).send('ok'); });
 	    } else {
-		res.send('record not found', 400);
+		res.status(400).send('record not found');
 	    }
 	});
 	});

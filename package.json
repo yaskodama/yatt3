@@ -3,31 +3,27 @@
   "version": "0.0.1",
   "description": "Yet Another Time Tables",
   "dependencies": {
-	"express": "3.0.3",
-	"stylus": ">= 0.29.x",
-	"jade": "*",
-	"bcrypt": ">= 0.5.x",
-	"mongodb": ">= 1.1.x",
-	"moment" : ">=1.7.x",
-	"emailjs": ">= 0.3.x"
+    "express": "^4.18.2",
+    "body-parser": "^1.20.2",
+    "cookie-parser": "^1.4.6",
+    "express-session": "^1.17.3",
+    "method-override": "^3.0.0",
+    "stylus": "^0.59.0",
+    "pug": "^3.0.2",
+    "bcryptjs": "^2.4.3",
+    "mongoose": "^6.13.5",
+    "moment": "^2.29.4",
+    "emailjs": "^4.0.3"
   },
   "author": {
-	"name": "Stephen Braitsch",
-	"email": "stephen@braitsch.io"
+    "name": "Stephen Braitsch",
+    "email": "stephen@braitsch.io"
   },
-  "website":{
-	"url": "node-login.braitsch.io"
-  },
-  "repository": {
-	"type": "git",
-	"url": "git://github.com/braitsch/node-login.git"
+  "website": {
+    "url": "node-login.braitsch.io"
   },
   "private": true,
   "scripts": {
     "start": "node app"
-  },
-  "engines": {
-	"node": "0.8.x",
-	"npm":  "1.1.x"
   }
 }

@@ -6,7 +6,7 @@ var mongoUri = process.env.MONGOLAB_URI ||
 /* heroku */
 //var db = mongoose.createConnection();
 /* heroku */
-var db = mongoose.createConnection('localhost', 'yatt');
+var db = mongoose.createConnection('mongodb://127.0.0.1/yatt');
 var Schema = mongoose.Schema;
 /* heroku */
 //db.open(mongoUri,function(err){
@@ -44,14 +44,14 @@ var classSchema = new mongoose.Schema( { lecCode: { type: String, required: true
 var Classes = db.model('Classes', classSchema);
 /* Contents */
 var fixitemsSchema = new mongoose.Schema({name:{type:String,required:true}, video: {type: String}, picture: {type: String},
-    items: [fixitemsSchema], date:{type:Date,default:Date.now}});
+    items: [], date:{type:Date,default:Date.now}});
 var fixpageSchema = new mongoose.Schema({name:{type:String,required:true}, video: {type: String}, picture: {type: String},
     groups: [fixitemsSchema], date:{type:Date,default:Date.now}});
 
 var contentsSchema = new mongoose.Schema( { cntCode: { type:String,required: true }, lang: {type:String, required: true },
 					    title: { type: String, required: true }, sign: {type:Number,required:true},
 					    author: { type: String, required: true },
-					    url: { type: String }, menu: [contentsSchema], pages: [fixpageSchema] });
+					    url: { type: String }, menu: [], pages: [fixpageSchema] });
 
 var Contents = db.model('Contents',contentsSchema);
 module.exports = REC;
@@ -64,10 +64,6 @@ REC.saveRecord = function(name,login_flag,callback) {
     return Access;
   };
 REC.getAccess = function() {
-    var accessSchema = new mongoose.Schema({ name: { type: String, required: true },
-				    login:{ type: Boolean, required: true },
-					     date: { type: Date, default: Date.now }});
-    var Access = db.model('Access', accessSchema);
     return Access;
   };
 REC.saveRecord2 = function(mongoose,name,login_flag,save_flag,callback) {
@@ -157,9 +153,10 @@ REC.newClasses = function(lecCode,name,callback) {
 	    var classes = new Classes();
 	    classes.lecCode = lecCode;
 	    classes.author = name;
-	    classes.group = [ { name: "Intro", classes: [ { name: "None" } ] },
-		      	      { name: "Background", classes: [ { name: "None"} ] },
-			      { name: "Background2", classes: [ { name: "None"} ] } ];
+	    // Use unique default item names so each session links to its own content page.
+	    classes.group = [ { name: "Intro",       classes: [ { name: lecCode + "-1-1" } ] },
+			      { name: "Background",  classes: [ { name: lecCode + "-2-1" } ] },
+			      { name: "Background2", classes: [ { name: lecCode + "-3-1" } ] } ];
 	    classes.title = "New";
 	    classes.lang = "ja";
 	    classes.objective = "Nothing...";
@@ -222,12 +219,14 @@ REC.setLecCode = function(docs,lecs) {
 
 REC.findHome = function(user,id,res) {
     Lectures.find({name:user}, function(err,docs) {
+	docs = docs || [];
 	if(docs[0]==undefined) {
 	    res.render('404', {title: 'Page Not Found'});
 	} else {
 	    var lecs = [];
 	    for(var i=0; i<30; i++) lecs[i]={ name: "", lecCode: "" };
 	    Classes.find({author:user}, function(err,d) {
+		d = d || [];
 		if(d[0]==undefined) {
 		    docs[0].lecs.forEach(function(f) {
 			lecs[f.week*5+f.time] = { name: 'None', lecCode: f.lecCode };
@@ -251,13 +250,19 @@ REC.findHome = function(user,id,res) {
 };
 
 REC.findLogin = function(user,id,res) {
+    var emptyLecs = [];
+    for(var i=0; i<30; i++) emptyLecs[i]={ name: "", lecCode: "" };
+
     Lectures.find({name:user}, function(err,docs) {
+	docs = docs || [];
 	if(docs[0]==undefined) {
-	    res.render('404', {title: 'Page Not Found'});
+	    res.render('login', { message: 'New User:',
+		name: '', id: id, lecs: emptyLecs, title: "Welcome to YaTT - Please Login To Your Account" });
 	} else {
 	    var lecs = [];
 	    for(var i=0; i<30; i++) lecs[i]={ name: "", lecCode: "" };
 	    Classes.find({author:user}, function(err,d) {
+		d = d || [];
 		if(d[0]==undefined) {
 		    docs[0].lecs.forEach(function(f) {
 			lecs[f.week*5+f.time] = { name: 'None', lecCode: f.lecCode };
@@ -296,34 +301,32 @@ REC.findEdit = function(user,id, res) {
 REC.findLecture = function(Code,user,id,res) {
     var Classes = REC.getClasses();
     Classes.find({lecCode:Code}, function(err,docs) {
+	docs = docs || [];
 	if(docs[0]==undefined) {
 	    res.render('404', {title: 'Page Not Found'});
-	} else {
-		var Contents = REC.getContents();
-		var cnts = [];
-		Contents.find({}, function(e,d) {
-		    if(d[0]==undefined) {
-			res.render('404', {title: 'Page Not Found'});
-		    } else {
-			for(var i=0;i<50;i++) cnts[i]={ name:"", cntCode:"", sign:"", url:"" };
-			var ii=0;
-			docs[0].group.forEach(function(f) {
-			    f.classes.forEach(function(c) {
-				var n = 'None'; var s = 1; var u = "";
-				for(i=0;i<d.length;i++) {
-				    if(d[i].cntCode==c.name) {
-					n = d[i].title; s = d[i].sign; u = d[i].url;
-				    }
-				}
-				cnts[ii++]={ name: n, cntCode: c.name, sign: s, url: u };
-				});
-			    });
-      	    		res.render('lecture', { message:'Lecture mode!',name:user,
-			    id:id,cnts:cnts,cls:docs[0], title:"Welcome to YaTT" });
-		    }
-		    });
+	    return;
 	}
+	var Contents = REC.getContents();
+	Contents.find({}, function(e,d) {
+	    d = d || [];
+	    var cnts = [];
+	    for(var i=0;i<50;i++) cnts[i]={ name:"", cntCode:"", sign:"", url:"" };
+	    var ii=0;
+	    (docs[0].group || []).forEach(function(f) {
+		(f.classes || []).forEach(function(c) {
+		    var n = 'None'; var s = 1; var u = "";
+		    for(i=0;i<d.length;i++) {
+			if(d[i].cntCode==c.name) {
+			    n = d[i].title; s = d[i].sign; u = d[i].url;
+			}
+		    }
+		    cnts[ii++]={ name: n, cntCode: c.name, sign: s, url: u };
+		});
+	    });
+	    res.render('lecture', { message:'Lecture mode!', name:user,
+		id:id, cnts:cnts, cls:docs[0], title:"Welcome to YaTT" });
 	});
+    });
 };
 
 
