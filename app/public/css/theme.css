@@ -1012,3 +1012,78 @@ details.auth-pop[open] > summary .auth-caret { transform: rotate(180deg); }
   color: #fff;
   background: var(--grad);
 }
+
+/* ==========================================================================
+   Public-pages gallery on the landing — one icon card per user
+   ========================================================================== */
+.user-gallery {
+  max-width: 1100px;
+  margin: 8px auto 0;
+  padding: 8px 24px 0;
+}
+.user-gallery-head {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--text-mute);
+  text-align: center;
+  margin-bottom: 16px;
+}
+.user-gallery-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
+}
+.user-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 116px;
+  padding: 18px 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: linear-gradient(180deg, #ffffff, var(--surface-soft));
+  box-shadow: var(--shadow-1);
+  text-align: center;
+  transition: transform .15s, box-shadow .2s, border-color .2s;
+}
+.user-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-2);
+  border-color: var(--accent);
+}
+.user-card.is-current {
+  border-color: var(--primary);
+  border-top: 3px solid var(--accent);
+}
+.user-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: #fff;
+  background: var(--grad);
+  box-shadow: 0 0 0 1px rgba(0,63,140,0.15), 0 8px 18px rgba(240,131,0,0.18);
+}
+.user-card-name {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--primary);
+  word-break: break-word;
+}
+.user-card-full {
+  font-size: 11px;
+  color: var(--text-mute);
+  line-height: 1.3;
+  word-break: break-word;
+}

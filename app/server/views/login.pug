@@ -46,6 +46,17 @@ block content
         else
             p.login-tagline!= __('tagline_default')
 
+    if users && users.length
+        .user-gallery
+            .user-gallery-head!= __('public_pages_i18n')
+            .user-gallery-grid
+                each u in users
+                    a.user-card(href='/' + u.user + '/top', class=(owner === u.user ? 'is-current' : ''))
+                        .user-avatar= (u.name || u.user).charAt(0).toUpperCase()
+                        .user-card-name= u.user
+                        if u.name && u.name !== u.user
+                            .user-card-full= u.name
+
     #wrapper.ui-widget-content.ui-corner-all
         #timetable_i18n.subtitle!= __('timetable_i18n')
         - var days = [{id:'monday_i18n',l:'Mon'},{id:'tuesday_i18n',l:'Tue'},{id:'wednesday_i18n',l:'Wed'},{id:'thursday_i18n',l:'Thu'},{id:'friday_i18n',l:'Fri'},{id:'saturday_i18n',l:'Sat'}]

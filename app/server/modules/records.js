@@ -249,7 +249,8 @@ REC.findHome = function(user,id,res) {
 	});
 };
 
-REC.findLogin = function(user,id,res) {
+REC.findLogin = function(user,id,res,users) {
+    users = users || [];
     var emptyLecs = [];
     for(var i=0; i<30; i++) emptyLecs[i]={ name: "", lecCode: "" };
 
@@ -257,7 +258,7 @@ REC.findLogin = function(user,id,res) {
 	docs = docs || [];
 	if(docs[0]==undefined) {
 	    res.render('login', { message: 'New User:',
-		name: '', owner: user, id: id, lecs: emptyLecs, title: "Welcome to YaTT - Please Login To Your Account" });
+		name: '', owner: user, id: id, lecs: emptyLecs, users: users, title: "Welcome to YaTT - Please Login To Your Account" });
 	} else {
 	    var lecs = [];
 	    for(var i=0; i<30; i++) lecs[i]={ name: "", lecCode: "" };
@@ -278,7 +279,7 @@ REC.findLogin = function(user,id,res) {
 			});
 		}
 		res.render('login', { message: 'New User:',
-		    name: user, owner: user, id: id, lecs: lecs, title: "Welcome to YaTT - Please Login To Your Account" });
+		    name: user, owner: user, id: id, lecs: lecs, users: users, title: "Welcome to YaTT - Please Login To Your Account" });
 		});
 	}
 	});

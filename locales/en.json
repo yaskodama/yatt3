@@ -92,5 +92,6 @@
   "btn_delete": "Delete",
   "new_password": "New password",
   "self_nodelete": "(you · cannot delete)",
-  "tagline_default": "Yet Another Time Table"
+  "tagline_default": "Yet Another Time Table",
+  "public_pages_i18n": "Public Pages"
 }

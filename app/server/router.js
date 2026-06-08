@@ -6,6 +6,13 @@ var mongoose = require('mongoose');
 var passport = require('./modules/auth');
 
 module.exports = function(app) {
+    // Render a public time-table page, passing the full list of accounts so the
+    // view can show a gallery of links to every user's public page.
+    function renderTop(user, req, res) {
+        AM.getAllRecords(function(e, accounts) {
+            REC.findLogin(user, req.session.id, res, accounts || []);
+        });
+    }
     app.get('/', function(req, res){
         // Already authenticated this session (restored from the Mongo session
         // store) — go straight to the user's personal home.
@@ -13,16 +20,16 @@ module.exports = function(app) {
         if (req.cookies.user == undefined || req.cookies.pass == undefined) {
 	    var name = 'Guest';
 	    var Access = REC.saveRecord(name,true,function(err){if(err){console.log(err);}});
-	    REC.findLogin("root", req.session.id, res);
+	    renderTop("root", req, res);
         } else {
     	    AM.autoLogin(req.cookies.user, req.cookies.pass, function(o){
 	        if (o != null){
 		    req.session.user = o;
-		    res.redirect('/home');
+		    res.redirect('/' + o.user + '/home');
 		} else {
 		    var name = 'Guest';
 		    var Access = REC.saveRecord(name,true,function(err){if(err){console.log(err);}});
-		    REC.findLogin("root", req.session.id, res);
+		    renderTop("root", req, res);
 		}
 		});
 	}
@@ -806,7 +813,7 @@ console.log(req.body.type);
 
     // --- public: a user's read-only time-table ---------------------------
     app.get('/:user/top', function(req, res) {
-        REC.findLogin(req.params.user, req.session.id, res);
+        renderTop(req.params.user, req, res);
     });
     // --- public: a user's lesson content (read-only) ---------------------
     app.get('/:user/lesson/:code', function(req, res) {
