@@ -42,9 +42,9 @@ block content
             span!= __('timetable_i18n')
         h1#welcome_i18n.login-title!= __('welcome_i18n')
         if owner
-            p.login-tagline!= '@' + owner + __('owners_timetable')
+            p#tt-tagline.login-tagline(data-suffix=__('owners_timetable'))!= '@' + owner + __('owners_timetable')
         else
-            p.login-tagline!= __('tagline_default')
+            p#tt-tagline.login-tagline(data-suffix=__('owners_timetable'))!= __('tagline_default')
 
     if users && users.length
         .user-gallery
@@ -59,33 +59,8 @@ block content
 
     #wrapper.ui-widget-content.ui-corner-all
         #timetable_i18n.subtitle!= __('timetable_i18n')
-        - var days = [{id:'monday_i18n',l:'Mon'},{id:'tuesday_i18n',l:'Tue'},{id:'wednesday_i18n',l:'Wed'},{id:'thursday_i18n',l:'Thu'},{id:'friday_i18n',l:'Fri'},{id:'saturday_i18n',l:'Sat'}]
-        - var periods = [{id:'first_lec_i18n',n:'1st',t:'9:30–11:00'},{id:'second_lec_i18n',n:'2nd',t:'11:10–12:40'},{id:'third_lec_i18n',n:'3rd',t:'13:30–15:00'},{id:'fourth_lec_i18n',n:'4th',t:'15:10–16:40'},{id:'fifth_lec_i18n',n:'5th',t:'16:50–18:20'}]
-        .tt-wrap
-            table.tt-table#lecture_table
-                thead
-                    tr
-                        th.tt-corner
-                        each day in days
-                            th.tt-day
-                                span(id=day.id)!= __(day.id)
-                tbody
-                    each period, j in periods
-                        tr
-                            th.tt-period
-                                span.tt-period-n(id=period.id)!= __(period.id)
-                                span.tt-period-t= period.t
-                            each day, d in days
-                                - var l = lecs[d*5 + j]
-                                - var has = l && l.name && l.name !== ''
-                                td.tt-cell(class=has ? 'is-filled' : 'is-empty')
-                                    if has
-                                        a.tt-lec(href=(owner ? ('/' + owner + '/lesson/' + l.lecCode) : ('/lesson?p=' + l.lecCode)))
-                                            if l.name === 'None'
-                                                span.tt-lec-name= l.lecCode
-                                            else
-                                                span.tt-lec-name= l.name
-                                                span.tt-lec-code= l.lecCode
+        #timetable-mount
+            include timetable
         .tt-foot Last update: Mon Nov 26 21:01:16 PST 2012 — yass@hosei.ac.jp
 
     include modals/alert

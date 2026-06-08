@@ -6,6 +6,31 @@ $(document).ready(function(){
     var hc = new HomeController();
 	/* add by yas */
 
+    // Landing-page gallery: click a user icon to swap the time-table below
+    // in place (no full page reload).
+    $('.user-gallery').on('click', '.user-card', function(e) {
+	var href = $(this).attr('href') || '';
+	var m = href.match(/^\/([^\/]+)\/top$/);
+	if (!m) { return; }                       // fall back to normal link
+	e.preventDefault();
+	var user = m[1];
+	var $card = $(this);
+	var $mount = $('#timetable-mount');
+	$mount.addClass('is-loading');
+	$.get('/api/timetable/' + encodeURIComponent(user), function(html) {
+	    $mount.html(html).removeClass('is-loading');
+	    $('.user-card').removeClass('is-current');
+	    $card.addClass('is-current');
+	    var $tag = $('#tt-tagline');
+	    $tag.text('@' + user + ($tag.attr('data-suffix') || ''));
+	    if (window.history && history.pushState) {
+		history.pushState({ user: user }, '', '/' + user + '/top');
+	    }
+	}).fail(function() { window.location.href = href; });
+    });
+    // Back/forward should reflect the URL that was pushed.
+    $(window).on('popstate', function() { window.location.reload(); });
+
     $("#login-form").ajaxForm({
 	beforeSubmit : function(formData, jqForm, options) {
 	    if (lv.validateForm() == false) {

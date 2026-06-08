@@ -249,6 +249,33 @@ REC.findHome = function(user,id,res) {
 	});
 };
 
+// Build the 30-slot lecs array for a user's public time-table (read-only),
+// without rendering — used by the /api/timetable/:user fragment endpoint.
+REC.buildUserLecs = function(user, callback) {
+    var lecs = [];
+    for(var i=0; i<30; i++) lecs[i]={ name: "", lecCode: "" };
+    Lectures.find({name:user}, function(err,docs) {
+	docs = docs || [];
+	if(docs[0]==undefined) { return callback(lecs); }
+	Classes.find({author:user}, function(err,d) {
+	    d = d || [];
+	    if(d[0]==undefined) {
+		docs[0].lecs.forEach(function(f) {
+		    lecs[f.week*5+f.time] = { name: 'None', lecCode: f.lecCode };
+		    });
+	    } else {
+		docs[0].lecs.forEach(function(f) {
+		    var n = 'None';
+		    for(var i=0;i<d.length;i++)
+			if(d[i].lecCode==f.lecCode) { n = d[i].title; }
+		    lecs[f.week*5+f.time] = { name:n, lecCode:f.lecCode };
+		    });
+	    }
+	    callback(lecs);
+	    });
+	});
+};
+
 REC.findLogin = function(user,id,res,users) {
     users = users || [];
     var emptyLecs = [];

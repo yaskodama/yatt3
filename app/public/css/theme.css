@@ -1087,3 +1087,8 @@ details.auth-pop[open] > summary .auth-caret { transform: rotate(180deg); }
   line-height: 1.3;
   word-break: break-word;
 }
+
+/* Time-table mount: fade slightly while swapping via the gallery */
+#timetable-mount { transition: opacity .15s; }
+#timetable-mount.is-loading { opacity: .4; }
+.user-card { cursor: pointer; }

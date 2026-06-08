@@ -789,6 +789,14 @@ console.log(req.body.type);
 	AM.delAllRecords( );
 	res.redirect('/print');
         });
+    // Public time-table fragment (HTML) for a user — used by the landing-page
+    // gallery to swap the displayed time-table in place without a full reload.
+    app.get('/api/timetable/:user', function(req, res) {
+        REC.buildUserLecs(req.params.user, function(lecs) {
+            res.render('timetable', { lecs: lecs, owner: req.params.user });
+        });
+    });
+
     // Language switch (JA/EN). Persists the choice in the `lang` cookie that
     // i18n reads on the next request, then returns to the page you were on.
     app.get('/lang/:code', function(req, res) {
