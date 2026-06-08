@@ -1092,3 +1092,21 @@ details.auth-pop[open] > summary .auth-caret { transform: rotate(180deg); }
 #timetable-mount { transition: opacity .15s; }
 #timetable-mount.is-loading { opacity: .4; }
 .user-card { cursor: pointer; }
+
+/* Create-account form: match the taller sign-in inputs */
+#account-form input[type='text'],
+#account-form input[type='password'],
+#account-form input[type='email'],
+#account-form select#country-list,
+#account-form select {
+  min-height: 46px;
+  height: auto !important;
+  padding: 13px 14px !important;
+  font-size: 15px !important;
+  line-height: 1.5 !important;
+  border: 1px solid var(--border-strong) !important;
+  border-radius: 12px !important;
+  box-sizing: border-box;
+}
+#account-form .control-group { margin-bottom: 14px; }
+#account-form .control-label { padding-top: 12px; font-weight: 600; color: var(--text-dim); }
