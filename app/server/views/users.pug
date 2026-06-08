@@ -1,0 +1,75 @@
+extends layout2
+
+block content
+    .um-head
+        .hero-eyebrow
+            span.pulse
+            span!= __('um_admin')
+        h1.um-title.grad-text!= __('um_title')
+        p.um-sub!= __('um_sub')
+
+    if notice
+        .um-notice= notice
+
+    #wrapper.um-wrap.ui-widget-content.ui-corner-all
+        .subtitle!= __('um_add')
+        form.um-create(method='post', action='/root/users')
+            input(type='hidden', name='action', value='create')
+            .um-grid
+                label
+                    span!= __('um_name')
+                    input(type='text', name='name', required)
+                label
+                    span!= __('um_username')
+                    input(type='text', name='newuser', required)
+                label
+                    span!= __('um_email')
+                    input(type='email', name='email', required)
+                label
+                    span!= __('um_password')
+                    input(type='text', name='pass', required)
+                label
+                    span!= __('um_country')
+                    select(name='country')
+                        each c in countries
+                            option(value=c.short, selected=(c.short === 'JP'))= c.name
+            button(type='submit').btn.btn-success!= __('um_create_btn')
+
+    #wrapper.um-wrap.ui-widget-content.ui-corner-all
+        .subtitle #{__('um_list')} (#{accts.length})
+        .tt-wrap
+            table.users-table
+                thead
+                    tr
+                        th!= __('th_user')
+                        th!= __('th_name')
+                        th!= __('th_email')
+                        th!= __('th_country')
+                        th!= __('th_date')
+                        th.um-actions!= __('th_actions')
+                tbody
+                    each a in accts
+                        tr
+                            td
+                                span.um-user= a.user
+                                if a.user === 'root'
+                                    span.um-badge root
+                            td= a.name
+                            td.um-email= a.email
+                            td= a.country
+                            td.um-date= a.date
+                            td.um-actions
+                                form.um-inline(method='post', action='/root/users')
+                                    input(type='hidden', name='action', value='resetpw')
+                                    input(type='hidden', name='user', value=a.user)
+                                    input(type='password', name='pass', placeholder=__('new_password'), required).um-pw
+                                    button(type='submit').um-btn.um-btn-pw!= __('btn_resetpw')
+                                if a.user !== 'root'
+                                    form.um-inline(method='post', action='/root/users', onsubmit='return confirm("' + a.user + '?")')
+                                        input(type='hidden', name='action', value='delete')
+                                        input(type='hidden', name='user', value=a.user)
+                                        button(type='submit').um-btn.um-btn-del!= __('btn_delete')
+                                else
+                                    span.um-self!= __('self_nodelete')
+
+    include modals/alert

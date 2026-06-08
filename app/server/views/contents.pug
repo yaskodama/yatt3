@@ -11,17 +11,17 @@ block content
         tr
             td(width='600',align='left')
                 #langbox
-                    span#language_i18n Language:
+                    span#language_i18n!= __('language_i18n')
                     select#lang
                     span#langbrowser
             td(align='right')
                 button#btn-logout2.btn.btn-primary
                     i.icon-lock.icon-white
-                    span#signout_i18n Sign Out
+                    span#signout_i18n!= __('signout_i18n')
     #wrapper.ui-widget-content.ui-corner-all
         p
-            #welcome_i18n(align='center',style='font-family:Century,Lucida Sans Unicode,sans-serif;font-size:4.4em;line-height:1.1em;color:#47FFFC;') Welcome to YaTT
-        #library_i18n.subtitle Lecture
+            #welcome_i18n(align='center',style='font-family:Century,Lucida Sans Unicode,sans-serif;font-size:4.4em;line-height:1.1em;color:#47FFFC;')!= __('welcome_i18n')
+        #library_i18n.subtitle!= __('library_i18n')
         p
         div(align='right')
             table
@@ -29,15 +29,15 @@ block content
                     td
                         p
                         a.open-ContentsGroup.bbutton(href="#UpdateAndEnd",role="button",data-toggle='modal')
-                            span#update_and_edit_i18n Update/Edit(OFF)
+                            span#update_and_edit_i18n!= __('update_and_edit_i18n')
                         #UpdateAndEnd.modal.hide.fade(tabindex='-1',role='dialog',aria-labelledby='myModalLabel',aria-hidden='true')
                             div.modal-header(style='line-height:1.5em;')
                                 button.close(data-dismiss='modal') x
-                                span.confirm_i18n(style='font-size:12pt;') Confirm
+                                span.confirm_i18n(style='font-size:12pt;')!= __('confirm_i18n')
                             div.modal-body(style='line-height:1.3em;')
                                 - if(contents.cntCode!='New') {
                                     h4
-                                        span.title_i18n Title
+                                        span.title_i18n!= __('title_i18n')
                                     p
                                         #modal-title
                                     p
@@ -48,12 +48,12 @@ block content
                                     p
                                     - }
                                     h4
-                                        span.type_i18n Type
+                                        span.type_i18n!= __('type_i18n')
                                     p
                                         #modal-radio
                                     - if(lecCode!=undefined) {
                                     form.form-inline(method='POST',action='/contents')
-                                        #clayout_button_i18n
+                                        #clayout_button_i18n!= __('clayout_button_i18n')
                                             input.btn.btn-success(type='submit',name='submit',value='Update')
                                         input(type='hidden',name='delete',value='update')
                                         input(type='hidden',name='update',value='layback')
@@ -71,7 +71,7 @@ block content
                                         - }
                                     - }
                                     form.form-inline(method='POST',action='/contents')
-                                        #edit_back_button_i18n
+                                        #edit_back_button_i18n!= __('edit_back_button_i18n')
                                             input.btn.btn-success(type='submit',name='submit',value='Update')
                                         input(type='hidden',name='delete',value='update')
                                         input(type='hidden',name='update',value='back')
@@ -88,7 +88,7 @@ block content
                                         - }
                                 - }
                                 form.form-inline(method='POST',action='/contents')
-                                    #update_button_i18n
+                                    #update_button_i18n!= __('update_button_i18n')
                                         input.btn.btn-success(type='submit',name='submit',value='Update')
                                     input(type='hidden',name='delete',value='update')
                                     - if(contents.cntCode==='New') {
@@ -122,7 +122,7 @@ block content
                 span (
                     textarea#Code(name='Code',height='12',cols='30') #{contents.cntCode}
                 span )
-            div.subtitle#week_i18n #{ii},#{jj}
+            div.subtitle#week_i18n!= __('week_i18n')
         - } else {
             div(align="center",style="font-size:4.5em;color:#0B3382;line-height:1.3em;")
                 textarea#title(name='title',height='30',cols='50') #{contents.title}
@@ -232,7 +232,7 @@ block content
             table
                 tr
                     td
-                        #author_name_i18n(style='font-size:2em;color:#0B3382;')
+                        #author_name_i18n(style='font-size:2em;color:#0B3382;')!= __('author_name_i18n')
                     td
                         span(style='font-size:2em;color:#0B3382;') #{name}
                     td

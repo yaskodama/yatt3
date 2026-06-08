@@ -5,7 +5,8 @@ $(document).ready(function(){
 	/* add by yass */
     var hc = new HomeController();
 	/* add by yas */
-    loadBundles(null);
+    // i18n now rendered server-side (Pug __()); client bundle loading disabled.
+    // loadBundles(null);
     jQuery('.open-LayoutGroup').click(function() {
 	var k=jQuery('.glength')[0].value;
 	for(var i=0; i<k; i++) {

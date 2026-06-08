@@ -5,13 +5,13 @@ block content
         tr
             td(width='600',align='left')
                 #langbox
-                    span#language_i18n Language:
+                    span#language_i18n!= __('language_i18n')
                     select#lang
                     span#langbrowser
     #wrapper.ui-widget-content.ui-corner-all
         p
-            #welcome_i18n(align='center',style='font-family:Century,Lucida Sans Unicode,sans-serif;font-size:4.4em;line-height:1.1em;color:#47FFFC;') Welcome to YaTT
-        #lectures_i18n.subtitle Lecture
+            #welcome_i18n(align='center',style='font-family:Century,Lucida Sans Unicode,sans-serif;font-size:4.4em;line-height:1.1em;color:#47FFFC;')!= __('welcome_i18n')
+        #lectures_i18n.subtitle!= __('lectures_i18n')
         - if(cls.lecCode!="New") {
             div(align="center",style="font-size:4.5em;color:#0B3382;line-height:1.3em;")
                 span #{cls.title}
@@ -24,28 +24,28 @@ block content
                                                 p
                                                     h2
                                                         font(color='#0B3382')
-                                                            span#objective_i18n Objectives
+                                                            span#objective_i18n!= __('objective_i18n')
                                                 div(style='line-height:2em;')
                                                     img(border='0',width='15',height='15',src='img/redtri.gif')
                                                     span(style='font-size:12pt;') #{cls.objective}
                                                 p
                                                     h2
                                                         font(color='#0B3382')
-                                                            span#textbooks_i18n Textbooks
+                                                            span#textbooks_i18n!= __('textbooks_i18n')
                                                 div(style='line-height:2em;')
                                                     img(border='0',width='15',height='15',src='img/redtri.gif')
                                                     span(style='font-size:12pt;') #{cls.textbook}
                                                 p
                                                     h2
                                                         font(color='#0B3382')
-                                                            span#references_i18n Reference
+                                                            span#references_i18n!= __('references_i18n')
                                                 div(style='line-height:2em;')
                                                     img(border='0',width='15',height='15',src='img/redtri.gif')
                                                     span(style='font-size:12pt;') #{cls.reference}
                                                 p
                                                     h2
                                                         font(color='#0B3382')
-                                                            span#advreferences_i18n Advanced References
+                                                            span#advreferences_i18n!= __('advreferences_i18n')
                                                 div(style='line-height:2em;')
                                                     img(border='0',width='15',height='15',src='img/redtri.gif')
                                                     span(style='font-size:12pt;') #{cls.advreference}
@@ -73,14 +73,14 @@ block content
         - } else {
             div(align='center',style='font-size:4.5em;color:#0B3382;line-height:1.3em;')  #{cls.title}
                 textarea#Code(name='Code',height='12',cols='30') #{cls.lecCode}
-                div.subtitle#week_i18n #{i},#{j}
+                div.subtitle#week_i18n!= __('week_i18n')
         - }
         hr
         div(align='right')
             table
                 tr
                     td
-                        #author_name_i18n(style='font-size:2em;color:#0B3382;')
+                        #author_name_i18n(style='font-size:2em;color:#0B3382;')!= __('author_name_i18n')
                     td
                         span(style='font-size:2em;color:#0B3382;') #{cls.author}
                     td
