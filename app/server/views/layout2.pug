@@ -1,5 +1,5 @@
 doctype html
-html(lang='ja')
+html(lang=(lang || 'ja'))
 	head
 		meta(charset='UTF-8')
 		meta(name='viewport', content='width=device-width, initial-scale=1.0')
@@ -15,12 +15,21 @@ html(lang='ja')
 	body
 		.yatt-grid
 		nav.yatt-topbar
-			a.yatt-brand(href='/home')
+			a.yatt-brand(href='/')
 				span.yatt-dot
 				span.grad-text YaTT
 			.yatt-spacer
-			.yatt-nav
-				a(href='/home') Home
-				a(href='/edit') Edit
-				a(href='/print') Accounts
+			.yatt-langtoggle
+				a(href='/lang/ja', class=(lang === 'ja' ? 'is-on' : '')) JA
+				a(href='/lang/en', class=(lang === 'en' ? 'is-on' : '')) EN
+			block topbar-right
+				.yatt-nav
+					if currentUser
+						a(href='/' + currentUser.user + '/home')!= __('nav_home')
+						a(href='/' + currentUser.user + '/edit')!= __('nav_edit')
+						a(href='/' + currentUser.user + '/top')!= __('nav_public')
+						if currentUser.user === 'root'
+							a.yatt-admin(href='/root/users')!= __('nav_users')
+					else
+						a(href='/')!= __('nav_home')
 		block content

@@ -11,17 +11,17 @@ block content
         tr
             td(width='600',align='left')
                 #langbox
-                    span#language_i18n Language:
+                    span#language_i18n!= __('language_i18n')
                     select#lang
                     span#langbrowser
             td(align='right')
                 button#btn-logout2.btn.btn-primary
                     i.icon-lock.icon-white
-                    span#signout_i18n Sign Out
+                    span#signout_i18n!= __('signout_i18n')
     #wrapper.ui-widget-content.ui-corner-all
         p
-            #welcome_i18n(align='center',style='font-family:Century,Lucida Sans Unicode,sans-serif;font-size:4.4em;line-height:1.1em;color:#47FFFC;') Welcome to YaTT
-        #lectures_i18n.subtitle Lecture
+            #welcome_i18n(align='center',style='font-family:Century,Lucida Sans Unicode,sans-serif;font-size:4.4em;line-height:1.1em;color:#47FFFC;')!= __('welcome_i18n')
+        #lectures_i18n.subtitle!= __('lectures_i18n')
         p
         div(align='right')
             table
@@ -29,17 +29,17 @@ block content
                     td
                         p
                         a.open-LayoutGroup.bbutton(href="#UpdateAndEnd",role="button",data-toggle='modal')
-                            span#update_and_edit_i18n Update/Edit(OFF)
+                            span#update_and_edit_i18n!= __('update_and_edit_i18n')
                         #UpdateAndEnd.modal.hide.fade(tabindex='-1',role='dialog',aria-labelledby='myModalLabel',aria-hidden='true')
                             div.modal-header(style='line-height:1.5em;')
                                 button.close(data-dismiss='modal') x
-                                span.confirm_i18n(style='font-size:12pt;') Confirm
+                                span.confirm_i18n(style='font-size:12pt;')!= __('confirm_i18n')
                             div.modal-body(style='line-height:1.3em;')
                                 - for(var j=0; j<cls.group.length; j++) {
                                     div(class='modal-group'+j)
                                 - }
                                 form.form-inline(method='POST',action='/clayout')
-                                    #update_button_i18n
+                                    #update_button_i18n!= __('update_button_i18n')
                                         input.btn.btn-success(type='submit',value='Update')
                                     input(type='hidden',name='delete',value='update')
                                     input(type='hidden',name='lecCode',value=cls.lecCode)
@@ -50,7 +50,7 @@ block content
                                     - var strCls = JSON.stringify(cls);
                                     input(type='hidden',name='cls',value=strCls)
                                 form.form-inline(method='POST',action='/clayout')
-                                    #edit_back_button_i18n
+                                    #edit_back_button_i18n!= __('edit_back_button_i18n')
                                         input.btn.btn-success(type='submit',value='Update')
                                     input(type='hidden',name='delete',value='back')
                                     input(type='hidden',name='lecCode',value=cls.lecCode)
@@ -62,7 +62,7 @@ block content
                                     input(type='hidden',name='cls',value=strCls)
                                 form.form-inline(method='GET',action='/home')
                                     input(type='hidden',name='start',value='true')
-                                    #cancel_and_edit_off_i18n
+                                    #cancel_and_edit_off_i18n!= __('cancel_and_edit_off_i18n')
                                         input.btn.btn-success(type='submit',name='submit',value='CANCEL/Edit(OFF)')
                             div.modal-footer
             div(align="center",style="font-size:4.5em;color:#0B3382;line-height:1.3em;") #{cls.title}
@@ -104,7 +104,7 @@ block content
                                                div.modal.hide.fade(id='dgrp'+(i),tabindex='-1',role='dialog',aria-labelledy='myModalLabel',aria-hidden='true')
                                                    div.modal-header
                                                        button.close(data-dismiss='modal') x
-                                                       span.delete_i18n Delete
+                                                       span.delete_i18n!= __('delete_i18n')
                                                    div.modal-body(style='line-height:1.3em;')
                                                        - for(var j=0; j<cls.group.length; j++) {
                                                            div(class='modal-group'+j)
@@ -127,7 +127,7 @@ block content
                                                div.modal.hide.fade(id='cgrp'+(i),tabindex='-1',role='dialog',aria-labelledy='myModalLabel',aria-hidden='true')
                                                    div.modal-header
                                                        button.close(data-dismiss='modal') x
-                                                       span.copy_i18n Copy
+                                                       span.copy_i18n!= __('copy_i18n')
                                                    div.modal-body(style='line-height:1.3em;')
                                                        - for(var j=0; j<cls.group.length; j++) {
                                                            div(class='modal-group'+j)
@@ -156,7 +156,7 @@ block content
                                                    div.modal.hide.fade(id='ditem'+(i)+(j),tabindex='-1',role='dialog',aria-labelledy='myModalLabel',aria-hidden='true')
                                                        div.modal-header
                                                            button.close(data-dismiss='modal') x
-                                                           span.delete_i18n Delete
+                                                           span.delete_i18n!= __('delete_i18n')
                                                        div.modal-body(style='line-height:1.3em;')
                                                            - for(var k=0; k<cls.group.length; k++) {
                                                                div(class='modal-group'+k)
@@ -182,7 +182,7 @@ block content
                                                    div.modal.hide.fade(id='citem'+(i)+(j),tabindex='-1',role='dialog',aria-labelledy='myModalLabel',aria-hidden='true')
                                                        div.modal-header
                                                            button.close(data-dismiss='modal') x
-                                                           span.copy_i18n Copy
+                                                           span.copy_i18n!= __('copy_i18n')
                                                        div.modal-body(style='line-height:1.3em;')
                                                            - for(var k=0; k<cls.group.length; k++) {
                                                                div(class='modal-group'+k)
@@ -262,7 +262,7 @@ block content
             table
                 tr
                     td
-                        #author_name_i18n(style='font-size:2em;color:#0B3382;')
+                        #author_name_i18n(style='font-size:2em;color:#0B3382;')!= __('author_name_i18n')
                     td
                         span(style='font-size:2em;color:#0B3382;') #{name}
                     td

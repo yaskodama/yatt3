@@ -5,13 +5,13 @@ block content
         tr
             td(width='600',align='left')
                 #langbox
-                    span#language_i18n Language:
+                    span#language_i18n!= __('language_i18n')
                     select#lang
                     span#langbrowser
     #wrapper.ui-widget-content.ui-corner-all
         p
-            #welcome_i18n(align='center',style='font-family:Century,Lucida Sans Unicode,sans-serif;font-size:4.4em;line-height:1.1em;color:#47FFFC;') Welcome to YaTT
-        #accounts_name_i18n.subtitle Accounts
+            #welcome_i18n(align='center',style='font-family:Century,Lucida Sans Unicode,sans-serif;font-size:4.4em;line-height:1.1em;color:#47FFFC;')!= __('welcome_i18n')
+        #accounts_name_i18n.subtitle!= __('accounts_name_i18n')
         p
             .contents
                 table#lecture_list.table(align='center')
@@ -33,7 +33,7 @@ block content
                                     div.modal.hide.fade(id='acc'+(i),tabindex='-1',role='dialog',aria-labelledy='myModalLabel',aria-hidden='true')
                                         div.modal-header
                                             button.close(data-dismiss='modal') x
-                                            span.delete_i18n Delete
+                                            span.delete_i18n!= __('delete_i18n')
                                         div.modal-body(style='line-height:1.5em;')
                                             span #{accts[i].user}
                                         div.modal-footer
@@ -47,7 +47,7 @@ block content
                                 td #{accts[i].user}
                                 td #{accts[i].date}
                         - };
-        #timetable_i18n.subtitle Time Table
+        #timetable_i18n.subtitle!= __('timetable_i18n')
         p
             .contents
                 table#lecture_list.table(align='center')
@@ -67,7 +67,7 @@ block content
                                     div.modal.hide.fade(id='tt'+(i),tabindex='-1',role='dialog',aria-labelledy='myModalLabel',aria-hidden='true')
                                         div.modal-header
                                             button.close(data-dismiss='modal') x
-                                            span.delete_i18n Delete
+                                            span.delete_i18n!= __('delete_i18n')
                                         div.modal-body(style='line-height:1.5em;')
                                             span #{lecs[i].name}
                                         div.modal-footer
@@ -82,7 +82,7 @@ block content
                                     td(style='font-size:9pt') (#{l.week},#{l.time},#{l.lecCode})
                                 - }
                         - };
-        #lectures_i18n.subtitle Lectures
+        #lectures_i18n.subtitle!= __('lectures_i18n')
         p
             .contents
                 table#lecture_list.table(align='center')
@@ -103,7 +103,7 @@ block content
                                  div.modal.hide.fade(id=(f.lecCode),tabindex='-1',role='dialog',aria-labelledy='myModalLabel',aria-hidden='true')
                                      div.modal-header
                                          button.close(data-dismiss='modal') x
-                                         span.delete_i18n Delete
+                                         span.delete_i18n!= __('delete_i18n')
                                      div.modal-body(style='line-height:1.5em;')
                                          span #{f.lecCode}
                                      div.modal-footer
@@ -118,7 +118,7 @@ block content
                               td #{f.lang}
                               td #{f.date}
                         - });
-        #library_i18n.subtitle Library
+        #library_i18n.subtitle!= __('library_i18n')
         p
             .contents
                 table#lecture_list.table(align='center')
@@ -140,7 +140,7 @@ block content
                                  div.modal.hide.fade(id=(f._id),tabindex='-1',role='dialog',aria-labelledy='myModalLabel',aria-hidden='true')
                                      div.modal-header
                                          button.close(data-dismiss='modal') x
-                                         span.delete_i18n Delete
+                                         span.delete_i18n!= __('delete_i18n')
                                      div.modal-body(style='line-height:1.5em;')
                                          span #{f.cntCode}
                                      div.modal-footer
@@ -156,7 +156,7 @@ block content
                               td #{f.lang}
                               td #{f.url}
                         - });
-        #log_title_i18n.subtitle Log
+        #log_title_i18n.subtitle!= __('log_title_i18n')
         p
             .contents
                 table#lecture_list.table(align='center')
@@ -177,7 +177,7 @@ block content
                                     div.modal.hide.fade(id='log'+(i),tabindex='-1',role='dialog',aria-labelledby='myModalLabel',aria-hidden='true')
                                         div.modal-header(style='line-height:1.5em;')
                                             button.close(data-dismiss='modal') x
-                                            span.delete_i18n Delete
+                                            span.delete_i18n!= __('delete_i18n')
                                         div.modal-body(style='line-height:1.5em;')
                                             span #{logs[i].date}
                                         div.modal-footer

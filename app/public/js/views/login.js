@@ -17,7 +17,12 @@ $(document).ready(function(){
 	    }
 	},
 	success	: function(responseText, status, xhr, $form){
-	    if (status == 'success') window.location.href = '/home';
+	    if (status == 'success') {
+		// redirect to the logged-in user's personal home: /<user>/home
+		var u = null;
+		try { u = JSON.parse(responseText).user; } catch (e) {}
+		window.location.href = u ? ('/' + u + '/home') : '/home';
+	    }
 	},
 	error : function(e){
 	    	lv.showLoginError('Login Failure', 'Please check your username and/or password');
@@ -47,7 +52,9 @@ $(document).ready(function(){
 	}
     });
 
-    loadBundles(null);
+    // i18n is now rendered server-side (Pug __()); client-side bundle loading
+    // is disabled so it does not overwrite the translated markup.
+    // loadBundles(null);
     jQuery('.open-UpdateAndEnd').click(function() {
 	if(jQuery('#Code').is('*')) jQuery('#input-leccode').attr({value: jQuery('#Code')[0].value });
 	if(jQuery('#title').is('*')) jQuery('.input-title').attr({value: jQuery('#title')[0].value });

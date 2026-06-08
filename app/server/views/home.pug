@@ -11,22 +11,22 @@ block content
         tr
             td(width='600',align='left')
                 #langbox
-                    span#language_i18n Language:
+                    span#language_i18n!= __('language_i18n')
                     select#lang
                     span#langbrowser
             td(align='right')
                 button#btn-logout2.btn.btn-primary
                     i.icon-lock.icon-white
-                    span#signout_i18n Sign Out
+                    span#signout_i18n!= __('signout_i18n')
     #wrapper.ui-widget-content.ui-corner-all
         p
-            #welcome_i18n(align='center',style='font-family:Century,Lucida Sans Unicode,sans-serif;font-size:4.4em;line-height:1.1em;color:#47FFFC;') Welcome to YaTT
-        #timetable_i18n.subtitle Time Table
+            #welcome_i18n(align='center',style='font-family:Century,Lucida Sans Unicode,sans-serif;font-size:4.4em;line-height:1.1em;color:#47FFFC;')!= __('welcome_i18n')
+        #timetable_i18n.subtitle!= __('timetable_i18n')
         p
         div(align='right')
             form.form-inline(mothod='GET',action='/edit')
                 button.bbutton(type='submit')
-                    span#edit_name_2_i18n
+                    span#edit_name_2_i18n!= __('edit_name_2_i18n')
         div(style='padding:0px 50px 30px 30px;')
             table.table#lecture_table(align='center')
                 thead
@@ -37,27 +37,27 @@ block content
                         td
                             img(src='img/sched02.gif',height='40')
                         td(style='background-color:#CCFFFF;text-align:center;vertical-align:middle;color:0',width='90',height='40',border='0')
-                            div#monday_i18n(style='font-size:20pt;width:70px') Mon
+                            div#monday_i18n(style='font-size:20pt;width:70px')!= __('monday_i18n')
                         td
                             img(src='img/sched02.gif',height='40')
                         td(style='background-color:#CCFFFF;text-align:center;vertical-align:middle;color:0',width='90',height='40',border='0')
-                            div#tuesday_i18n(style='font-size:20pt;width:70px') Tue
+                            div#tuesday_i18n(style='font-size:20pt;width:70px')!= __('tuesday_i18n')
                         td
                             img(src='img/sched02.gif',height='40')
                         td(style='background-color:#CCFFFF;text-align:center;vertical-align:middle;color:0',width='90',height='40',border='0')
-                            div#wednesday_i18n(style='font-size:20pt;width:70px') Wed
+                            div#wednesday_i18n(style='font-size:20pt;width:70px')!= __('wednesday_i18n')
                         td
                             img(src='img/sched02.gif',height='40')
                         td(style='background-color:#CCFFFF;text-align:center;vertical-align:middle;color:0',width='90',height='40',border='0')
-                            div#thursday_i18n(style='font-size:20pt;width:70px') Thu
+                            div#thursday_i18n(style='font-size:20pt;width:70px')!= __('thursday_i18n')
                         td
                             img(src='img/sched02.gif',height='40')
                         td(style='background-color:#CCFFFF;text-align:center;vertical-align:middle;color:0',width='90',height='40',border='0')
-                            div#friday_i18n(style='font-size:20pt;width:70px') Fri
+                            div#friday_i18n(style='font-size:20pt;width:70px')!= __('friday_i18n')
                         td
                             img(src='img/sched02.gif',height='40')
                         td(style='background-color:#CCFFFF;text-align:center;vertical-align:middle;color:0',width='90',height='40',border='0')
-                            div#saturday_i18n(style='font-size:20pt;width:70px') Sat
+                            div#saturday_i18n(style='font-size:20pt;width:70px')!= __('saturday_i18n')
                         td
                             img(src='img/sched04.gif',height='40')
                 tbody
@@ -73,37 +73,37 @@ block content
                         td(style='background-color:#CCFFFF;font-size:9pt;text-align:center;vertical-align:middle;line-height:1.3em',width='90',height='40',border='0')
                             - switch(j) { case 0:
                                 i
-                                    span#first_lec_i18n 1st
+                                    span#first_lec_i18n!= __('first_lec_i18n')
                                     br
                                     span 9:30-11:00
                             - break; case 1:
                                 i
-                                    span#second_lec_i18n 2nd
+                                    span#second_lec_i18n!= __('second_lec_i18n')
                                     br
                                     span 11:10-12:40
                             - break; case 2:
                                 i
-                                    span#third_lec_i18n 3rd
+                                    span#third_lec_i18n!= __('third_lec_i18n')
                                     br
                                     span 13:30-15:00
                             - break; case 3:
                                 i
-                                    span#fourth_lec_i18n 4th
+                                    span#fourth_lec_i18n!= __('fourth_lec_i18n')
                                     br
                                     span 15:10-16:40
                             - break; case 4:
                                 i
-                                    span#fifth_lec_i18n 5th
+                                    span#fifth_lec_i18n!= __('fifth_lec_i18n')
                                     br
                                     span 16:50-18:20
                             - break; case 5:
                                 i
-                                    span#six_lec_i18n 6th
+                                    span#six_lec_i18n!= __('six_lec_i18n')
                                     br
                                     span 18:30-20:00
                             - break; case 6:
                                 i
-                                    span#seventh_lec_i18n 7th
+                                    span#seventh_lec_i18n!= __('seventh_lec_i18n')
                                     br
                                     span 20:10-21:40
                             - }
@@ -112,10 +112,10 @@ block content
                         - for(var i=0; i<5; i++) {
                             td(style='background-color:#CCFFFF;text-align:center;vertical-align:middle;color:#1717FF',width='90',height='40',border='0')
                                 - var l=lecs[i*5+j];if(l.name=='None') {
-                                    a(href="/lesson?p="+(l.lecCode))
+                                    a(href='/'+currentUser.user+'/lesson/'+(l.lecCode))
                                         span(style='font-size:11pt;line-height:1.3em;') #{l.lecCode}
                                 - } else if(l.name!="") {
-                                    a(href="/lesson?p="+(l.lecCode))
+                                    a(href='/'+currentUser.user+'/lesson/'+(l.lecCode))
                                         span(style='font-size:11pt;line-height:1.3em;') #{l.name}
                                 - }
                             td
@@ -123,10 +123,10 @@ block content
                         - }
                         td(style='background-color:#CCFFFF;text-align:center;vertical-align:middle;color:#1717FF',width='90',height='40',border='0')
                             - var l=lecs[25+j]; if(l.name=='None') {
-                                a(href='/lesson?p='+(l.lecCode))
+                                a(href='/'+currentUser.user+'/lesson/'+(l.lecCode))
                                     span(style='font-size:11pt;line-height:1.3em;') #{l.lecCode}
                             - } else {
-                                a(href='/lesson?p='+(l.lecCode))
+                                a(href='/'+currentUser.user+'/lesson/'+(l.lecCode))
                                     span(style='font-size:11pt;line-height:1.3em;') #{l.name}
                             - }
                         - if(j==4) {

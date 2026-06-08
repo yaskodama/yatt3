@@ -267,3 +267,50 @@ AM.findByMultipleFields = function(a, callback)
     //		else callback(null, results)
     //	});
 }
+
+// ---- user-management helpers (used by /users, root only) ------------------
+
+// Create an account from an admin form. Robust variant of AM.signup that
+// reports username/email collisions and waits for the save to complete.
+AM.createUser = function(data, callback)
+{
+    Accounts.findOne({ user: data.user }, function(e, o) {
+        if (e) { return callback(e); }
+        if (o) { return callback('username-taken'); }
+        Accounts.findOne({ email: data.email }, function(e2, o2) {
+            if (e2) { return callback(e2); }
+            if (o2) { return callback('email-taken'); }
+            AM.saltAndHash(data.pass, function(hash) {
+                Accounts.create({
+                    name:    data.name,
+                    email:   data.email,
+                    user:    data.user,
+                    pass:    hash,
+                    country: data.country || 'JP',
+                    date:    moment().format('MMMM Do YYYY, h:mm:ss a')
+                }, function(err, doc) { callback(err, doc); });
+            });
+        });
+    });
+}
+
+// Delete a single account by its username.
+AM.deleteByUser = function(user, callback)
+{
+    Accounts.deleteOne({ user: user }, function(err, result) {
+        callback(err, result);
+    });
+}
+
+// Reset an account's password (admin action), looked up by username.
+AM.setPasswordByUser = function(user, newPass, callback)
+{
+    Accounts.findOne({ user: user }, function(e, o) {
+        if (e) { return callback(e); }
+        if (!o) { return callback('user-not-found'); }
+        AM.saltAndHash(newPass, function(hash) {
+            o.pass = hash;
+            o.save(function(err) { callback(err, o); });
+        });
+    });
+}

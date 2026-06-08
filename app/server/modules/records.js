@@ -257,7 +257,7 @@ REC.findLogin = function(user,id,res) {
 	docs = docs || [];
 	if(docs[0]==undefined) {
 	    res.render('login', { message: 'New User:',
-		name: '', id: id, lecs: emptyLecs, title: "Welcome to YaTT - Please Login To Your Account" });
+		name: '', owner: user, id: id, lecs: emptyLecs, title: "Welcome to YaTT - Please Login To Your Account" });
 	} else {
 	    var lecs = [];
 	    for(var i=0; i<30; i++) lecs[i]={ name: "", lecCode: "" };
@@ -278,7 +278,7 @@ REC.findLogin = function(user,id,res) {
 			});
 		}
 		res.render('login', { message: 'New User:',
-		    name: user, id: id, lecs: lecs, title: "Welcome to YaTT - Please Login To Your Account" });
+		    name: user, owner: user, id: id, lecs: lecs, title: "Welcome to YaTT - Please Login To Your Account" });
 		});
 	}
 	});

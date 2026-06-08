@@ -5,15 +5,15 @@ block content
         tr
             td(width='600',align='left')
                 #langbox
-                    span#language_i18n Language:
+                    span#language_i18n!= __('language_i18n')
                     select#lang
                     span#langbrowser
     #wrapper.ui-widget-content.ui-corner-all
         p
-            #welcome_i18n(align='center',style='font-family:Century,Lucida Sans Unicode,sans-serif;font-size:4.4em;line-height:1.1em;color:#47FFFC;') Welcome to YaTT
-        #message_title_i18n.subtitle Message
+            #welcome_i18n(align='center',style='font-family:Century,Lucida Sans Unicode,sans-serif;font-size:4.4em;line-height:1.1em;color:#47FFFC;')!= __('welcome_i18n')
+        #message_title_i18n.subtitle!= __('message_title_i18n')
         p
-            #page_not_found_i18n(align='center',style='font-family:Century,Lucida Sans Unicode,sans-serif;font-size:2em;line-height:1.1em;color:#0B3382;')
+            #page_not_found_i18n(align='center',style='font-family:Century,Lucida Sans Unicode,sans-serif;font-size:2em;line-height:1.1em;color:#0B3382;')!= __('page_not_found_i18n')
         hr
         p
             div(align='center') Last update: Mon Nov 26 21:01:16 PST 2012 by
