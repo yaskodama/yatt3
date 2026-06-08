@@ -54,6 +54,7 @@ module.exports = function(app, exp) {
 	app.use(function(req, res, next) {
 		res.locals.currentUser = req.session.user || null;
 		res.locals.lang = res.getLocale();
+		res.locals.currentPath = req.path;
 		next();
 	});
 	app.use(stylus.middleware({ src: app.root + '/app/public' }));

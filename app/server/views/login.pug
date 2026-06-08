@@ -8,8 +8,6 @@ block topbar-right
             a(href='/' + currentUser.user + '/home')!= __('nav_home')
             a(href='/' + currentUser.user + '/edit')!= __('nav_edit')
             a(href='/' + currentUser.user + '/top')!= __('nav_public')
-            if currentUser.user === 'root'
-                a.yatt-admin(href='/root/users')!= __('nav_users')
     else
         .yatt-auth
             a.yatt-auth-up(href='/signup')
@@ -61,7 +59,10 @@ block content
         #timetable_i18n.subtitle!= __('timetable_i18n')
         #timetable-mount
             include timetable
-        .tt-foot Last update: Mon Nov 26 21:01:16 PST 2012 — yass@hosei.ac.jp
+        .tt-foot
+            | Last update: Mon Nov 26 21:01:16 PST 2012 —
+            |
+            img(src='/img/logo231.gif', width='87', height='27', alt='yass@hosei.ac.jp', style='vertical-align:middle;')
 
     include modals/alert
     include modals/lost-password

@@ -155,13 +155,13 @@ block content
                                                             img(border='0',width='10',height='10',src='img/redtri.gif')
                                                             - var l=cnts[ii++] || {name:'None',cntCode:'',sign:1,url:''};
                                                             - if(l.name=='None') {
-                                                                a(href='/citem?p='+l.cntCode) #{l.cntCode}
+                                                                a(href='/'+currentUser.user+'/citem/'+l.cntCode) #{l.cntCode}
                                                             - } else if(l.sign==0 && l.url) {
                                                                 a(href=l.url,target='_blank') #{l.name}
                                                                 |
-                                                                a(href='/citem?p='+l.cntCode,style='font-size:0.8em;color:#888;') (edit)
+                                                                a(href='/'+currentUser.user+'/citem/'+l.cntCode,style='font-size:0.8em;color:#888;') (edit)
                                                             - } else {
-                                                                a(href='/citem?p='+l.cntCode) #{l.name}
+                                                                a(href='/'+currentUser.user+'/citem/'+l.cntCode) #{l.name}
                                                             - }
                                                - });
                                    - });

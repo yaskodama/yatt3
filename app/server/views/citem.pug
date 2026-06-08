@@ -11,10 +11,11 @@ block content
         tr
             td(width='600',align='left')
             td(align='right')
-                button#btn-logout2.btn.btn-primary
-                    i.icon-lock.icon-white
-                    span#signout_i18n!= __('signout_i18n')
-    #wrapper.ui-widget-content.ui-corner-all
+                if currentUser
+                    button#btn-logout2.btn.btn-primary
+                        i.icon-lock.icon-white
+                        span#signout_i18n!= __('signout_i18n')
+    #wrapper.ui-widget-content.ui-corner-all(class=((typeof canEdit !== 'undefined' && canEdit) ? '' : 'is-readonly'))
         p
             #welcome_i18n(align='center',style='font-family:Century,Lucida Sans Unicode,sans-serif;font-size:4.4em;line-height:1.1em;color:#47FFFC;')!= __('welcome_i18n')
         #library_i18n.subtitle!= __('library_i18n')
@@ -95,12 +96,12 @@ block content
         - if(contents.cntCode === 'New') {
             div(align="center",style="font-size:4.5em;color:#0B3382;line-height:1.3em;") #{contents.title}
                 span (
-                    textarea#Code(name='Code',height='12',cols='30') #{contents.cntCode}
+                    textarea#Code(name='Code',height='12',cols='30',readonly=!canEdit) #{contents.cntCode}
                 span )
             div.subtitle#week_i18n!= __('week_i18n')
         - } else {
             div(align="center",style="font-size:4.5em;color:#0B3382;line-height:1.3em;")
-                textarea#title(name='title',height='30',cols='50') #{contents.title}
+                textarea#title(name='title',height='30',cols='50',readonly=!canEdit) #{contents.title}
                 span (#{contents.cntCode})
             p
             table#ltable(border='0',cellspacing='0',cellpadding='0',width='100%')
@@ -120,7 +121,7 @@ block content
                                                    p
                                                    p
                                                      img(border='0',width='10',height='10',src='img/redtri.gif')
-                                                     textarea#url(name='url',height='30',cols='50') #{contents.url}
+                                                     textarea#url(name='url',height='30',cols='50',readonly=!canEdit) #{contents.url}
                                            tr
                                                td.righttitle2
                                                    input#optionsRadios2(type='radio',name='optionsRadios',value='1')

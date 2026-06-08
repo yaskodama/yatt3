@@ -104,60 +104,69 @@ module.exports = function(app) {
 	    }
 	}
 	});
-    function renderLesson(code, req, res) {    /* public lesson view (read-only) */
+    function renderLesson(code, owner, req, res) {    /* public lesson view; auto-creates a default page */
 	var Classes = REC.getClasses();
-	Classes.find({lecCode:code}, function(e,docs) {
-	    if(docs[0]==undefined) {
-		res.render('404', {title:'Page Not Found'});
-	    } else {
-		var Contents = REC.getContents();
+	var Contents = REC.getContents();
+	function show(clsDoc) {
+	    Contents.find({}, function(e, d) {
+		d = d || [];
 		var cnts = [];
-		Contents.find({}, function(e,d) {
-		    if(d[0]==undefined) {
-			res.render('404', {title: 'Page Not Found'});
-		    } else {
-			for(var i=0;i<50;i++) cnts[i]={ name:"", cntCode:"", sign:"", url:"" };
-			var ii=0;
-			docs[0].group.forEach(function(f) {
-			    f.classes.forEach(function(c) {
-				var n = 'None'; var s = 1; var u = "";
-				for(i=0;i<d.length;i++) {
-				    if(d[i].cntCode==c.name) {
-					n = d[i].title; s = d[i].sign; u = d[i].url;
-				    }
-				}
-				cnts[ii++]={ name: n, cntCode: c.name, sign: s, url: u };
-				});
-			    });
-		    }
-		    res.render('lesson', { message:'Lecture mode!',
-		        id:req.session.id, cnts:cnts, cls:docs[0], title:"Welcome to YaTT" });
+		for(var i=0;i<50;i++) cnts[i]={ name:"", cntCode:"", sign:"", url:"" };
+		var ii=0;
+		(clsDoc.group || []).forEach(function(f) {
+		    (f.classes || []).forEach(function(c) {
+			var n = 'None'; var s = 1; var u = "";
+			for(var k=0;k<d.length;k++) {
+			    if(d[k].cntCode==c.name) { n = d[k].title; s = d[k].sign; u = d[k].url; }
+			}
+			cnts[ii++]={ name: n, cntCode: c.name, sign: s, url: u };
+			});
 		    });
-	    }
-            });
+		var who = clsDoc.author || owner || '';
+		var canEdit = !!(req.session.user && req.session.user.user === who);
+		res.render('lesson', { message:'Lecture mode!', id:req.session.id,
+		    cnts:cnts, cls:clsDoc, owner:who, canEdit:canEdit, title:"Welcome to YaTT" });
+	    });
 	}
-    app.get('/lesson', function(req, res) { renderLesson(req.query.p, req, res); });
-    function renderCitem(cntCode, req, res) {    /* contents-item editor */
+	Classes.findOne({lecCode:code}, function(e, cls) {
+	    if (cls) { return show(cls); }
+	    // No class doc yet → create a default page owned by the timetable's user.
+	    var author = owner || (req.session.user && req.session.user.user) || 'root';
+	    REC.newClasses(code, author, function(err) {
+		Classes.findOne({lecCode:code}, function(e2, created) {
+		    if (!created) { return res.render('404', {title:'Page Not Found'}); }
+		    show(created);
+		    });
+		});
+	    });
+	}
+    app.get('/lesson', function(req, res) { renderLesson(req.query.p, (req.session.user && req.session.user.user) || null, req, res); });
+    function renderCitem(cntCode, editable, req, res) {    /* contents item: editable for owner, read-only otherwise */
 	var Contents = REC.getContents();
 	var userName = (req.session.user && req.session.user.user) || 'Guest';
-	Contents.find({cntCode:cntCode}, function(e,docs) {
-	    if(docs[0]==undefined) {
-		// Auto-create a stub Contents doc so the user can fill it in.
+	Contents.findOne({cntCode:cntCode}, function(e, doc) {
+	    if(doc) {
+		res.render('citem', { message:'Contents mode!', name: userName,
+		    id: req.session.id, contents: doc, canEdit: !!editable, title: "Welcome to YaTT" });
+	    } else if(editable && req.session.user) {
+		// owner opening their own (not-yet-created) item → create a stub to edit
 		REC.newContents(cntCode, userName, '', function(err) {
 		    if(err) { res.status(400).send(err); return; }
 		    Contents.findOne({cntCode:cntCode}, function(e2, doc2) {
 			if(!doc2) { res.render('404', {title:'Page Not Found'}); return; }
 			res.render('citem', { message:'Contents mode!', name: userName,
-			    id: req.session.id, contents: doc2, title: "Welcome to YaTT" });
+			    id: req.session.id, contents: doc2, canEdit: true, title: "Welcome to YaTT" });
 		    });
 		});
 	    } else {
-	        res.render('citem', { message:'Contents mode!', name: userName,
-		    id: req.session.id, contents: docs[0], title: "Welcome to YaTT" });
+		// public / read-only and nothing stored yet → show a placeholder, create nothing
+		var placeholder = { cntCode: cntCode, title: cntCode, url: '', sign: 0, lang: 'ja', author: '' };
+		res.render('citem', { message:'Contents mode!', name: userName,
+		    id: req.session.id, contents: placeholder, canEdit: false, title: "Welcome to YaTT" });
 	    }
             });
 	}
-    app.get('/citem', function(req, res) { renderCitem(req.query.p, req, res); });
+    app.get('/citem', function(req, res) { renderCitem(req.query.p, false, req, res); });
     app.get('/lecture', function(req, res) {
         if (req.session.user == null) { res.redirect('/'); return; }
         var lecCode = req.query.p;
@@ -825,7 +834,7 @@ console.log(req.body.type);
     });
     // --- public: a user's lesson content (read-only) ---------------------
     app.get('/:user/lesson/:code', function(req, res) {
-        renderLesson(req.params.code, req, res);
+        renderLesson(req.params.code, req.params.user, req, res);
     });
 
     // --- private: must be logged in as :user -----------------------------
@@ -843,7 +852,7 @@ console.log(req.body.type);
         renderClayout(req.params.code, req, res);
     });
     app.get('/:user/citem/:code', requireSelf, function(req, res) {
-        renderCitem(req.params.code, req, res);
+        renderCitem(req.params.code, true, req, res);
     });
 
     // bare /:user → that user's public top page
