@@ -20,7 +20,7 @@ block topbar-right
                     span.auth-caret ▾
                 .auth-panel
                     #login-container2
-                        form(method="post")#login-form
+                        form(method="post", action="/")#login-form
                             label
                                 span#username_i18n!= __('username_i18n')
                             input(type="text", name="user", id='user-tf').required

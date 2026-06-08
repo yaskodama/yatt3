@@ -44,9 +44,8 @@ $(document).ready(function(){
 	success	: function(responseText, status, xhr, $form){
 	    if (status == 'success') {
 		// redirect to the logged-in user's personal home: /<user>/home
-		var u = null;
-		try { u = JSON.parse(responseText).user; } catch (e) {}
-		window.location.href = u ? ('/' + u + '/home') : '/home';
+		var u = $('#user-tf').val();
+		window.location.href = u ? ('/' + encodeURIComponent(u) + '/home') : '/home';
 	    }
 	},
 	error : function(e){
