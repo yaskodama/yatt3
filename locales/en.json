@@ -93,5 +93,6 @@
   "new_password": "New password",
   "self_nodelete": "(you · cannot delete)",
   "tagline_default": "Yet Another Time Table",
-  "public_pages_i18n": "Public Pages"
+  "public_pages_i18n": "Public Pages",
+  "edit_lecture_i18n": "Edit this lecture"
 }

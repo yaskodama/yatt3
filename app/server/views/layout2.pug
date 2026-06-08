@@ -28,8 +28,18 @@ html(lang=(lang || 'ja'))
 						a(href='/' + currentUser.user + '/home')!= __('nav_home')
 						a(href='/' + currentUser.user + '/edit')!= __('nav_edit')
 						a(href='/' + currentUser.user + '/top')!= __('nav_public')
-						if currentUser.user === 'root'
-							a.yatt-admin(href='/root/users')!= __('nav_users')
 					else
 						a(href='/')!= __('nav_home')
+		//- Left admin menu (root only). Designed to grow to several items.
+		if currentUser && currentUser.user === 'root'
+			nav.yatt-sidebar
+				.yatt-sidebar-title!= __('um_admin')
+				a.yatt-sidebar-item(href='/root/users', class=(currentPath === '/root/users' ? 'is-active' : ''))
+					span.yatt-sidebar-ic
+						svg(viewBox='0 0 24 24', width='18', height='18', fill='none', stroke='currentColor', stroke-width='2', stroke-linecap='round', stroke-linejoin='round')
+							path(d='M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2')
+							circle(cx='9', cy='7', r='4')
+							path(d='M23 21v-2a4 4 0 0 0-3-3.87')
+							path(d='M16 3.13a4 4 0 0 1 0 7.75')
+					span.yatt-sidebar-label!= __('nav_users')
 		block content

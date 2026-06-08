@@ -93,5 +93,6 @@
   "new_password": "新パスワード",
   "self_nodelete": "（自分・削除不可）",
   "tagline_default": "もうひとつの時間割",
-  "public_pages_i18n": "公開ページ"
+  "public_pages_i18n": "公開ページ",
+  "edit_lecture_i18n": "この授業を編集"
 }
