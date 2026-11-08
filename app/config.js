@@ -38,6 +38,14 @@ module.exports = function(app, exp) {
 
 	// Heroku terminates TLS at its router; trust X-Forwarded-* headers.
 	app.set('trust proxy', 1);
+	// Behind Heroku's router, send plain-http visitors to https (local dev has
+	// no X-Forwarded-Proto header, so it is unaffected).
+	app.use(function(req, res, next) {
+		if (req.headers['x-forwarded-proto'] === 'http') {
+			return res.redirect(301, 'https://' + req.headers.host + req.originalUrl);
+		}
+		next();
+	});
 
 	app.use(bodyParser.urlencoded({ extended: true }));
 	app.use(bodyParser.json());
