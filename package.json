@@ -29,5 +29,8 @@
   "private": true,
   "scripts": {
     "start": "node app"
+  },
+  "engines": {
+    "node": "22.x"
   }
 }

@@ -29,11 +29,15 @@ module.exports = function(app, exp) {
 	// Session store lives in MongoDB (same host as the accounts DB) so that
 	// login state survives server restarts instead of vanishing with the
 	// default in-memory store.
-	var sessionDb = process.env.SESSION_DB || 'mongodb://127.0.0.1/login-testing';
+	var sessionDb = process.env.MONGODB_URI || 'mongodb://127.0.0.1/';
+	var sessionDbName = process.env.ACCOUNTS_DB || 'login-testing';
 
 	app.set('port', process.env.PORT || 3000);
 	app.set('views', app.root + '/app/server/views');
 	app.set('view engine', 'pug');
+
+	// Heroku terminates TLS at its router; trust X-Forwarded-* headers.
+	app.set('trust proxy', 1);
 
 	app.use(bodyParser.urlencoded({ extended: true }));
 	app.use(bodyParser.json());
@@ -42,7 +46,7 @@ module.exports = function(app, exp) {
 		secret: process.env.SESSION_SECRET || 'super-duper-secret-secret',
 		resave: false,
 		saveUninitialized: false,
-		store: MongoStore.create({ mongoUrl: sessionDb, collectionName: 'sessions' }),
+		store: MongoStore.create({ mongoUrl: sessionDb, dbName: sessionDbName, collectionName: 'sessions' }),
 		cookie: { maxAge: 1000 * 60 * 60 * 24 * 7 }   // 1 week
 	}));
 	app.use(methodOverride());

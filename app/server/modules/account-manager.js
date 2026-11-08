@@ -3,7 +3,7 @@ var mongoose = require('mongoose');
 /* heroku */
 //var db = mongoose.createConnection();
 /* heroku */
-var db = mongoose.createConnection('mongodb://127.0.0.1/login-testing');
+var db = mongoose.createConnection(process.env.MONGODB_URI || 'mongodb://127.0.0.1/', { dbName: process.env.ACCOUNTS_DB || 'login-testing' });
 var Schema = mongoose.Schema;
 var mongoUri = process.env.MONGOLAB_URI ||
 		process.env.MONGOHQ_URL ||

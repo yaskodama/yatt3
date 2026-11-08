@@ -6,7 +6,8 @@ var mongoUri = process.env.MONGOLAB_URI ||
 /* heroku */
 //var db = mongoose.createConnection();
 /* heroku */
-var db = mongoose.createConnection('mongodb://127.0.0.1/yatt');
+// MONGODB_URI (e.g. Atlas, no db name in path) on Heroku; local mongod otherwise.
+var db = mongoose.createConnection(process.env.MONGODB_URI || 'mongodb://127.0.0.1/', { dbName: process.env.YATT_DB || 'yatt' });
 var Schema = mongoose.Schema;
 /* heroku */
 //db.open(mongoUri,function(err){
@@ -212,6 +213,9 @@ REC.setLecList = function(docs,leclist) {
 
 REC.setLecCode = function(docs,lecs) {
     for(var i=0; i<30; i++) lecs[i]="";
+    // Accounts with no Lectures (e.g. a fresh root) yield empty docs — guard
+    // against docs[0]/lecs being undefined so login doesn't crash the process.
+    if(!docs || !docs[0] || !docs[0].lecs) return;
     docs[0].lecs.forEach(function(f) {
 	lecs[f.week*5+f.time] = f.lecCode;
 	});
