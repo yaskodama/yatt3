@@ -6,6 +6,8 @@ var mongoose = require('mongoose');
 var passport = require('./modules/auth');
 
 module.exports = function(app) {
+    // JSON API for the iPhone app — mounted first so /api/v1/* never reaches the HTML routes.
+    require('./api')(app);
     // Render a public time-table page, passing the full list of accounts so the
     // view can show a gallery of links to every user's public page.
     function renderTop(user, req, res) {
