@@ -7,6 +7,7 @@
  *   GET  /api/v1/me                    → {ok, user} | 401
  *   GET  /api/v1/users/:user/timetable → {user, days, periods, slots:[{week,time,lecCode,title}]}
  *   GET  /api/v1/users/:user/lessons/:code → {lecCode,title,objective,textbook,reference,advreference,groups}
+ *   GET  /api/v1/news                  → {ok, items:[{id,title,body,url,pinned,date,updated}]}  (public)
  *
  * Timetables and lesson pages are already public in the HTML app (/:user/top,
  * /:user/lesson/:code), so the read endpoints are public too. Unlike the HTML
@@ -16,6 +17,7 @@
 var exp = require('express');
 var passport = require('./modules/auth');
 var REC = require('./modules/records.js');
+var NEWS = require('./news.js');
 
 var DAYS = [
     { ja: '月', en: 'Mon' }, { ja: '火', en: 'Tue' }, { ja: '水', en: 'Wed' },
@@ -95,6 +97,13 @@ module.exports = function(app) {
                 }),
                 webURL: '/' + encodeURIComponent(req.params.user) + '/lesson/' + encodeURIComponent(c.lecCode)
             });
+        });
+    });
+
+    api.get('/news', function(req, res) {
+        NEWS.listNews(50, function(err, items) {
+            if (err) { return res.status(500).json({ ok: false, error: 'db' }); }
+            res.json({ ok: true, items: (items || []).map(NEWS.publicItem) });
         });
     });
 

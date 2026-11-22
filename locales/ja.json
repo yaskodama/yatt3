@@ -94,5 +94,21 @@
   "self_nodelete": "（自分・削除不可）",
   "tagline_default": "もうひとつの時間割",
   "public_pages_i18n": "公開ページ",
-  "edit_lecture_i18n": "この授業を編集"
+  "edit_lecture_i18n": "この授業を編集",
+  "nav_news": "お知らせ",
+  "nw_title": "お知らせ",
+  "nw_sub": "ゼミのアプリ（お知らせタブ）に出ます。固定したものは一番上に出ます",
+  "nw_add": "お知らせを書く",
+  "nw_edit": "お知らせを直す",
+  "nw_list": "お知らせ一覧",
+  "nw_f_title": "タイトル",
+  "nw_f_body": "本文",
+  "nw_f_url": "リンク（任意・https://…）",
+  "nw_f_pinned": "一番上に固定",
+  "nw_post": "公開する",
+  "nw_save": "保存する",
+  "nw_cancel": "やめる",
+  "nw_btn_edit": "直す",
+  "nw_pinned": "固定",
+  "nw_empty": "まだお知らせはありません"
 }

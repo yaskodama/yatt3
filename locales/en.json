@@ -94,5 +94,21 @@
   "self_nodelete": "(you · cannot delete)",
   "tagline_default": "Yet Another Time Table",
   "public_pages_i18n": "Public Pages",
-  "edit_lecture_i18n": "Edit this lecture"
+  "edit_lecture_i18n": "Edit this lecture",
+  "nav_news": "News",
+  "nw_title": "News",
+  "nw_sub": "Shown in the seminar app's News tab. Pinned items stay on top",
+  "nw_add": "Write an announcement",
+  "nw_edit": "Edit announcement",
+  "nw_list": "Announcements",
+  "nw_f_title": "Title",
+  "nw_f_body": "Body",
+  "nw_f_url": "Link (optional, https://…)",
+  "nw_f_pinned": "Pin to top",
+  "nw_post": "Publish",
+  "nw_save": "Save",
+  "nw_cancel": "Cancel",
+  "nw_btn_edit": "Edit",
+  "nw_pinned": "Pinned",
+  "nw_empty": "No announcements yet"
 }

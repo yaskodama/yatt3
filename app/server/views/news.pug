@@ -1,0 +1,59 @@
+extends layout2
+
+block content
+    .um-head
+        .hero-eyebrow
+            span.pulse
+            span!= __('um_admin')
+        h1.um-title.grad-text!= __('nw_title')
+        p.um-sub!= __('nw_sub')
+
+    if notice
+        .um-notice= notice
+
+    #wrapper.um-wrap.ui-widget-content.ui-corner-all
+        .subtitle!= editing ? __('nw_edit') : __('nw_add')
+        form.um-create.nw-form(method='post', action='/root/news')
+            input(type='hidden', name='action', value=(editing ? 'update' : 'create'))
+            if editing
+                input(type='hidden', name='id', value=String(editing._id))
+            label.nw-field
+                span!= __('nw_f_title')
+                input(type='text', name='title', maxlength='200', required, value=(editing ? editing.title : ''))
+            label.nw-field
+                span!= __('nw_f_body')
+                textarea(name='body', rows='6', maxlength='5000')= editing ? editing.body : ''
+            label.nw-field
+                span!= __('nw_f_url')
+                input(type='url', name='url', maxlength='500', placeholder='https://', value=(editing ? editing.url : ''))
+            label.nw-check
+                input(type='checkbox', name='pinned', checked=(editing ? !!editing.pinned : false))
+                span!= __('nw_f_pinned')
+            .nw-buttons
+                button(type='submit').btn.btn-success!= editing ? __('nw_save') : __('nw_post')
+                if editing
+                    a.um-btn(href='/root/news')!= __('nw_cancel')
+
+    #wrapper.um-wrap.ui-widget-content.ui-corner-all
+        .subtitle #{__('nw_list')} (#{items.length})
+        if items.length === 0
+            p.nw-empty!= __('nw_empty')
+        each n in items
+            .nw-item
+                .nw-meta
+                    if n.pinned
+                        span.um-badge!= __('nw_pinned')
+                    span.um-date= new Date(n.date).toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' })
+                .nw-item-title= n.title
+                if n.body
+                    .nw-item-body= n.body
+                if n.url
+                    a.nw-item-url(href=n.url, target='_blank', rel='noopener')= n.url
+                .um-actions
+                    a.um-btn.um-btn-pw(href='/root/news?edit=' + String(n._id))!= __('nw_btn_edit')
+                    form.um-inline(method='post', action='/root/news', onsubmit='return confirm("削除しますか？ / Delete?")')
+                        input(type='hidden', name='action', value='delete')
+                        input(type='hidden', name='id', value=String(n._id))
+                        button(type='submit').um-btn.um-btn-del!= __('btn_delete')
+
+    include modals/alert

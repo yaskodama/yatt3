@@ -55,6 +55,12 @@ var contentsSchema = new mongoose.Schema( { cntCode: { type:String,required: tru
 					    url: { type: String }, menu: [], pages: [fixpageSchema] });
 
 var Contents = db.model('Contents',contentsSchema);
+/* News (seminar announcements for the iPhone app; written by root at /root/news) */
+var newsSchema = new mongoose.Schema({ title: { type: String, required: true }, body: { type: String, default: '' },
+				   url: { type: String, default: '' }, pinned: { type: Boolean, default: false },
+				   author: { type: String, required: true },
+				   date: { type: Date, default: Date.now }, updated: { type: Date, default: Date.now } });
+var News = db.model('News', newsSchema);
 module.exports = REC;
 
 REC.saveRecord = function(name,login_flag,callback) {
@@ -64,6 +70,7 @@ REC.saveRecord = function(name,login_flag,callback) {
     access.save(callback);
     return Access;
   };
+REC.getNews = function() { return News; };
 REC.getAccess = function() {
     return Access;
   };
