@@ -217,7 +217,6 @@ AM.getAccounts = function() {
 AM.getAllRecords = function(callback)
 {
     Accounts.find({},function(err,docs) {
-	    console.log(docs);
 	    if (err) callback(err)
 		else callback(null, docs)
 	 });

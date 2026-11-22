@@ -52,7 +52,8 @@ module.exports = function(app) {
 			res.cookie('user', o.user, { maxAge: 900000 });
 			res.cookie('pass', o.pass, { maxAge: 900000 });
 		    }
-		    res.status(200).send(o);
+		    // Send only the public fields — never the password hash or email.
+		    res.status(200).send({ user: o.user, name: o.name || o.user });
 		});
 	    }
 	})(req, res, next);
